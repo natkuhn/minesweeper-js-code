@@ -3,11 +3,12 @@
 */
 
 
-onload = init
+onload = init;
 
 function init() {
-	rows = 10;
-	cols = 15;
+//	alert('loading');
+	rows = 3;
+	cols = 4;
 	var board = new Board(rows, cols);
 };
 
@@ -45,14 +46,37 @@ Board.prototype = {
 	}
 }
 
+//values of Tile.status
+var UNCOVERED = -1;
+var COVERED = 0;
+var FLAG = 1;
+var QUESTION = 2;
+var EXCLAMATION = 3;	//not a status per se but used for displaying hints
+
 function Tile(i,j) {
+//	console.log('building tile '+i+','+j);
 	this.myRow = i;
 	this.myRow = j;
 	this.tdElt = document.createElement('td');
 	this.tdElt.onclick = this.click
+	this.reset();
+//	alert('got here');
 }
 
 Tile.prototype = {
+	reset: function() {
+//		console.log('resetting');
+		this.bomb = false
+		this.status = COVERED
+		this.bombNeighbors = -1;	//unrevealed
+		this.updateIcon();
+	},
+	
+	updateIcon: function() {
+//		console.log('updating');
+		this.tdElt.setAttribute("class","icon"+this.status);
+	},
+	
 	click: function(evt) {
 	
 	}
