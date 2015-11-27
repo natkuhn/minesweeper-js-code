@@ -99,7 +99,9 @@ function Tile(i,j) {
 	this.myRow = i;
 	this.myCol = j;
 	this.tdElt = document.createElement('td');
-	this.tdElt.onclick = function(e) { this.click(e) }
+	
+	var t = this;
+	this.tdElt.onclick = function(e) { t.click(e) };
 //	this.tdElt.onclick = this.clickHandler(i,j);
 	this.reset();
 //	alert('got here');
