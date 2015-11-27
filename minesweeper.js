@@ -1,8 +1,11 @@
 /* minesweeper.js
 	Nat Kuhn, started 11/26/15
 	
+	v0.1 11/27/15: handles left click, right click, and standard game play
+	
 	* TODO: needs a way to start a new game
 	* TODO: needs settings, especially board size including custom
+	* TODO: needs timer, counter (meaning it needs fonts)
 */
 
 var theTimer;
