@@ -99,7 +99,8 @@ function Tile(i,j) {
 	this.myRow = i;
 	this.myCol = j;
 	this.tdElt = document.createElement('td');
-	this.tdElt.onclick = this.clickHandler(i,j);
+	this.tdElt.onclick = function(e) { this.click(e) }
+//	this.tdElt.onclick = this.clickHandler(i,j);
 	this.reset();
 //	alert('got here');
 }
@@ -122,14 +123,15 @@ Tile.prototype = {
 		this.bomb = v;
 	},
 	
-	clickHandler: function(i,j) {	//returns a handler which invokes the click() method
+/*	clickHandler: function(i,j) {	//returns a handler which invokes the click() method
 		return function(evt) {
 			var t = theBoard.board[i][j];	//the tile in question
 			t.click();
 		}
 	},
+	*/
 	
-	click: function() {
+	click: function(evtObj) {
 		console.log('mouseclick in tile '+this.myRow+','+this.myCol);
 		if ( this.status == FLAG || this.status == UNCOVERED ) return;	//ignore clicks on flags or already uncovered
 		if ( this.bomb ) {	//oops, you lose
@@ -138,6 +140,7 @@ Tile.prototype = {
 			theTimer.stop()
 			theCounter.decrement();
 			//game over, loss
+			//TODO: look at flags which are not bombs
 			for ( i=0 ; i < theBoard.numrows ; i++ ) {
 				for ( j=0 ; j < theBoard.numcols ; j++ ) {
 					var t = theBoard.board[i][j];
