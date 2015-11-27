@@ -7,10 +7,14 @@ onload = init;
 
 function init() {
 //	alert('loading');
-	rows = 3;
-	cols = 4;
+	var rows = 3;
+	var cols = 4;
+	var bombs = 5;
+	var theTimer = new Timer();
+	var theCounter = new Counter();
 	var theBoard = new Board();
 	theBoard.newBoard(rows, cols);
+	theBoard.setBombs( bombs);
 }
 
 function Board(r,c) {
@@ -21,6 +25,8 @@ function Board(r,c) {
 
 Board.prototype = {
 	newBoard: function(r,c) {
+		this.playing = true;	//set to false at end of game
+		theTimer.reset();
 		if ( this.numrows == r && this.numcols == c ) {
 			//no need for new board
 			for ( i=0 ; i < this.numrows ; i++ ) {
@@ -56,6 +62,20 @@ Board.prototype = {
 			this.tableElt.appendChild(newRowElt);
 		}
 	}
+	
+	setBombs: function(k) {
+		var n = this.numrows * this.numcols;
+//		this.nonBombs = n - k;
+		while ( n > 0 ) {
+			n--;
+			var cutoff = Math.floor( Math.random() * n ); //random # >=0 and <n
+			if ( cutoff < k ) {
+				var j = n % numcols;
+				var i = Math.floor(n / numcols);
+				this.board[i][j].setBomb(true);
+			}
+		}
+	}
 };
 
 //values of Tile.status
@@ -89,9 +109,33 @@ Tile.prototype = {
 		this.tdElt.setAttribute("class","icon"+this.status);
 	},
 	
-	click: function(evt) {
+	setBomb(b): function(v) {
+		this.bomb = v;
+	}
 	
+	click: function(evt) {
+		
 	}
 }
 
+function Timer() {
+	//make the timer here?
+	this.reset = function() {
+		this.going = false;
+		//etc
+	}
 	
+	this.start = function() {
+		this.going = true;
+		//etc
+	}
+	
+	this.stop = function() {
+		this.going = false;
+	}
+
+}
+
+function Counter() {
+	
+}
