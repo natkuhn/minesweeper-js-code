@@ -1,5 +1,8 @@
 /* minesweeper.js
 	Nat Kuhn, started 11/26/15
+	
+	* TODO: needs a way to start a new game
+	* TODO: needs settings, especially board size including custom
 */
 
 var theTimer;
@@ -36,11 +39,6 @@ function Board(r,c) {
 		if ( this.numrows == r && this.numcols == c ) {
 			//no need for new board
 			this.allTiles( function(t) { t.reset() } );
-//			for ( i=0 ; i < this.numrows ; i++ ) {
-//				for ( j=0 ; j < this.numcols ; j++ ) {
-//					this.board[i][j].reset();
-//				}
-//			}
 			return;
 		}
 		this.numrows = r
@@ -108,7 +106,6 @@ var QUESTION = 2;
 var EXCLAMATION = 3;	//not a status per se but used for displaying hints
 
 function Tile(i,j) {
-//	console.log('building tile '+i+','+j);
 	this.myRow = i;
 	this.myCol = j;
 	this.tdElt = document.createElement('td');
@@ -121,7 +118,6 @@ function Tile(i,j) {
 
 Tile.prototype = {
 	reset: function() {
-//		console.log('resetting');
 		this.bomb = false
 		this.status = COVERED
 		this.bombNeighbors = -1;	//unrevealed
@@ -129,7 +125,6 @@ Tile.prototype = {
 	},
 	
 	setIcon: function(iconName) {
-//		console.log('updating');
 		this.tdElt.setAttribute("class", iconName);
 	},
 	
@@ -142,19 +137,19 @@ Tile.prototype = {
 		if ( !theBoard.playing || this.status == UNCOVERED ) return false;
 		if ( this.status == COVERED ) {
 			theCounter.decrement();
-			this.status == FLAG;
+			this.status = FLAG;
 			this.setIcon("flag");
 			return false;
 		}
 		if ( this.status == FLAG ) {	//there could be a setting to go straight back to covered w/o going through ?
 			theCounter.increment();
-			this.status == QUESTION;
+			this.status = QUESTION;
 			this.setIcon("question");
 			return false;
 		}
 		if ( this.status == QUESTION ) {
-			this.status == COVERED;
-			this.setIcon("question");
+			this.status = COVERED;
+			this.setIcon("covered");
 			return false;
 		}
 		assert(false, "Tile has invalid status: "+this.status);
