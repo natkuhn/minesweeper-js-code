@@ -2,29 +2,31 @@
 	Nat Kuhn, started 11/26/15
 */
 
+var theTimer;
+var theCounter;
+var theBoard;
 
 onload = init;
 
 function init() {
 //	alert('loading');
-	var rows = 3;
-	var cols = 4;
-	var bombs = 5;
-	var theTimer = new Timer();
-	var theCounter = new Counter();
-	var theBoard = new Board();
+	var rows = 9;
+	var cols = 9;
+	var bombs = 10;
+	theTimer = new Timer();
+	theCounter = new Counter();
+	theBoard = new Board();
 	theBoard.newBoard(rows, cols);
-	theBoard.setBombs( bombs);
+	theBoard.setBombs( bombs );
+	theCounter.setTo( bombs );
 }
 
 function Board(r,c) {
 	this.tableElt = document.getElementById("grid");
 	this.numrows = null;
 	this.numcols = null;
-}
-
-Board.prototype = {
-	newBoard: function(r,c) {
+	
+	this.newBoard = function(r,c) {
 		this.playing = true;	//set to false at end of game
 		theTimer.reset();
 		if ( this.numrows == r && this.numcols == c ) {
@@ -61,22 +63,24 @@ Board.prototype = {
 			this.board.push(newRow);
 			this.tableElt.appendChild(newRowElt);
 		}
-	}
+	};
 	
-	setBombs: function(k) {
+	this.setBombs = function(k) {
 		var n = this.numrows * this.numcols;
 //		this.nonBombs = n - k;
 		while ( n > 0 ) {
 			n--;
 			var cutoff = Math.floor( Math.random() * n ); //random # >=0 and <n
 			if ( cutoff < k ) {
-				var j = n % numcols;
-				var i = Math.floor(n / numcols);
+				var j = n % this.numcols;
+				var i = Math.floor(n / this.numcols);
 				this.board[i][j].setBomb(true);
 			}
 		}
-	}
-};
+	};
+
+
+}
 
 //values of Tile.status
 var UNCOVERED = -1;
@@ -101,17 +105,17 @@ Tile.prototype = {
 		this.bomb = false
 		this.status = COVERED
 		this.bombNeighbors = -1;	//unrevealed
-		this.updateIcon();
+		this.setIcon("icon"+this.status);
 	},
 	
-	updateIcon: function() {
+	setIcon: function(iconName) {
 //		console.log('updating');
-		this.tdElt.setAttribute("class","icon"+this.status);
+		this.tdElt.setAttribute("class", iconName);
 	},
 	
-	setBomb(b): function(v) {
+	setBomb: function(v) {
 		this.bomb = v;
-	}
+	},
 	
 	click: function(evt) {
 		
@@ -137,5 +141,7 @@ function Timer() {
 }
 
 function Counter() {
-	
+	this.setTo = function(k) {
+		
+	}
 }
