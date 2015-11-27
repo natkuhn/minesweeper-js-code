@@ -75,6 +75,7 @@ function Board(r,c) {
 				var j = n % this.numcols;
 				var i = Math.floor(n / this.numcols);
 				this.board[i][j].setBomb(true);
+				k--;
 			}
 		}
 	};
@@ -92,9 +93,9 @@ var EXCLAMATION = 3;	//not a status per se but used for displaying hints
 function Tile(i,j) {
 //	console.log('building tile '+i+','+j);
 	this.myRow = i;
-	this.myRow = j;
+	this.myCol = j;
 	this.tdElt = document.createElement('td');
-	this.tdElt.onclick = this.click
+	this.tdElt.onclick = this.clickHandler(i,j);
 	this.reset();
 //	alert('got here');
 }
@@ -117,8 +118,36 @@ Tile.prototype = {
 		this.bomb = v;
 	},
 	
-	click: function(evt) {
+	clickHandler: function(i,j) {	//returns a handler which invokes the click() method
+		return function(evt) {
+			var t = theBoard.board[i][j];	//the tile in question
+			t.click();
+		}
+	},
+	
+	click: function() {
+		console.log('mouseclick in tile '+this.myRow+','+this.myCol);
+		if ( this.status == FLAG || this.status == UNCOVERED ) return;	//ignore clicks on flags or already uncovered
+		if ( this.bomb ) {	//oops, you lose
+			this.setIcon("xb");
+			this.status = UNCOVERED;
+			theTimer.stop()
+			theCounter.decrement();
+			//game over, loss
+			for ( i=0 ; i < theBoard.numrows ; i++ ) {
+				for ( j=0 ; j < theBoard.numcols ; j++ ) {
+					var t = theBoard.board[i][j];
+					if ( t.bomb && t.status != UNCOVERED ) {
+						t.setIcon("uxb");
+						if (t.status == FLAG) theCounter.decrement();
+					}
+				}
+			}
+		}
 		
+		else {	//not a bomb
+	
+		}
 	}
 }
 
@@ -142,6 +171,14 @@ function Timer() {
 
 function Counter() {
 	this.setTo = function(k) {
+		
+	}
+	
+	this.decrement = function() {
+		
+	}
+	
+	this.increment = function() {
 		
 	}
 }
