@@ -67,7 +67,7 @@ function Board(r,c) {
 	
 	this.setBombs = function(k) {
 		var n = this.numrows * this.numcols;
-//		this.nonBombs = n - k;
+		this.nonBombs = n - k;
 		while ( n > 0 ) {
 			n--;
 			var cutoff = Math.floor( Math.random() * n ); //random # >=0 and <n
@@ -79,8 +79,12 @@ function Board(r,c) {
 			}
 		}
 	};
-
-
+	
+	this.getTile = function(i,j) {
+		if ( i < 0 || i >= this.numrows ) return null;
+		if ( j < 0 || j >= this.numcols ) return null;
+		return this.board[i][j];
+	}
 }
 
 //values of Tile.status
@@ -143,10 +147,51 @@ Tile.prototype = {
 					}
 				}
 			}
+			alert('You lose!');
 		}
 		
 		else {	//not a bomb
+			this.uncoverNonbomb();
+		}
+	},
 	
+	uncoverNonbomb: function() {
+		var neighbors = [];
+		var bombNeighbors = 0;
+		var i = this.myRow;
+		var j = this.myCol;
+		addIn( theBoard.getTile( i-1 , j-1 ) );
+		addIn( theBoard.getTile( i-1 , j   ) );
+		addIn( theBoard.getTile( i-1 , j+1 ) );
+		addIn( theBoard.getTile( i   , j-1 ) );
+		addIn( theBoard.getTile( i   , j+1 ) );
+		addIn( theBoard.getTile( i+1 , j-1 ) );
+		addIn( theBoard.getTile( i+1 , j   ) );
+		addIn( theBoard.getTile( i+1 , j+1 ) );
+		
+		this.status = UNCOVERED;
+		this.setIcon("n"+bombNeighbors);
+		
+		theBoard.nonBombs--;
+		
+		if (theBoard.nonBombs == 0 ) {
+			theTimer.stop();
+			alert('You win!');
+		}
+		
+		if (bombNeighbors > 0) return;
+		
+		//all neighbors are non-bombs, uncover them
+		for ( i=0 ; i < neighbors.length ; i++ ) {
+			var t = neighbors[i];
+			if ( t.status != UNCOVERED ) t.uncoverNonbomb();
+		}
+
+		function addIn(x) {
+			if (x) {
+				neighbors.push(x);
+				if (x.bomb) bombNeighbors++;
+			}
 		}
 	}
 }
