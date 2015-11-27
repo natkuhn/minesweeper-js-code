@@ -19,6 +19,8 @@ function init() {
 	theBoard.newBoard(rows, cols);
 	theBoard.setBombs( bombs );
 	theCounter.setTo( bombs );
+	window.oncontextmenu = function() { return false };	//override context menu, 
+	//per http://stackoverflow.com/questions/2405771/is-right-click-a-javascript-event
 }
 
 function Board(r,c) {
@@ -29,13 +31,16 @@ function Board(r,c) {
 	this.newBoard = function(r,c) {
 		this.playing = true;	//set to false at end of game
 		theTimer.reset();
+		this.playing = true;
+		
 		if ( this.numrows == r && this.numcols == c ) {
 			//no need for new board
-			for ( i=0 ; i < this.numrows ; i++ ) {
-				for ( j=0 ; j < this.numcols ; j++ ) {
-					this.board[i][j].reset();
-				}
-			}
+			this.allTiles( function(t) { t.reset() } );
+//			for ( i=0 ; i < this.numrows ; i++ ) {
+//				for ( j=0 ; j < this.numcols ; j++ ) {
+//					this.board[i][j].reset();
+//				}
+//			}
 			return;
 		}
 		this.numrows = r
@@ -85,6 +90,14 @@ function Board(r,c) {
 		if ( j < 0 || j >= this.numcols ) return null;
 		return this.board[i][j];
 	}
+	
+	this.allTiles = function(iter) {
+		for ( i=0 ; i < this.numrows ; i++ ) {
+			for ( j=0 ; j < this.numcols ; j++ ) {
+				iter(this.board[i][j]);
+			}
+		}
+	};
 }
 
 //values of Tile.status
@@ -100,11 +113,10 @@ function Tile(i,j) {
 	this.myCol = j;
 	this.tdElt = document.createElement('td');
 	
-	var t = this;
-	this.tdElt.onclick = function(e) { t.click(e) };
-//	this.tdElt.onclick = this.clickHandler(i,j);
+	var self = this;
+	this.tdElt.onclick = function(e) { self.leftClick(e) };
+	this.tdElt.oncontextmenu = function(e) { self.rightClick(e) };
 	this.reset();
-//	alert('got here');
 }
 
 Tile.prototype = {
@@ -113,7 +125,7 @@ Tile.prototype = {
 		this.bomb = false
 		this.status = COVERED
 		this.bombNeighbors = -1;	//unrevealed
-		this.setIcon("icon"+this.status);
+		this.setIcon("covered");
 	},
 	
 	setIcon: function(iconName) {
@@ -125,33 +137,48 @@ Tile.prototype = {
 		this.bomb = v;
 	},
 	
-/*	clickHandler: function(i,j) {	//returns a handler which invokes the click() method
-		return function(evt) {
-			var t = theBoard.board[i][j];	//the tile in question
-			t.click();
+	rightClick: function(evtObj) {
+		//do nothing if game over or already uncovered
+		if ( !theBoard.playing || this.status == UNCOVERED ) return false;
+		if ( this.status == COVERED ) {
+			theCounter.decrement();
+			this.status == FLAG;
+			this.setIcon("flag");
+			return false;
 		}
+		if ( this.status == FLAG ) {	//there could be a setting to go straight back to covered w/o going through ?
+			theCounter.increment();
+			this.status == QUESTION;
+			this.setIcon("question");
+			return false;
+		}
+		if ( this.status == QUESTION ) {
+			this.status == COVERED;
+			this.setIcon("question");
+			return false;
+		}
+		assert(false, "Tile has invalid status: "+this.status);
 	},
-	*/
 	
-	click: function(evtObj) {
+	leftClick: function(evtObj) {
 		console.log('mouseclick in tile '+this.myRow+','+this.myCol);
-		if ( this.status == FLAG || this.status == UNCOVERED ) return;	//ignore clicks on flags or already uncovered
+		//ignore clicks if game over, or on flags or already uncovered
+		if ( !theBoard.playing || this.status == FLAG || this.status == UNCOVERED ) return;
 		if ( this.bomb ) {	//oops, you lose
 			this.setIcon("xb");
 			this.status = UNCOVERED;
 			theTimer.stop()
 			theCounter.decrement();
 			//game over, loss
-			//TODO: look at flags which are not bombs
-			for ( i=0 ; i < theBoard.numrows ; i++ ) {
-				for ( j=0 ; j < theBoard.numcols ; j++ ) {
-					var t = theBoard.board[i][j];
-					if ( t.bomb && t.status != UNCOVERED ) {
-						t.setIcon("uxb");
-						if (t.status == FLAG) theCounter.decrement();
-					}
-				}
-			}
+			theBoard.playing = false;
+			theBoard.allTiles( function(t) {
+				if ( t.status == UNCOVERED ) return;
+				if ( t.bomb ) t.setIcon("uxb");
+				else /*covered non-bomb*/ if (t.status == FLAG) {
+					theCounter.increment();		//counter should show only correct guesses
+					t.setIcon("nb");
+				} 
+			} );
 			alert('You lose!');
 		}
 		
@@ -180,8 +207,17 @@ Tile.prototype = {
 		theBoard.nonBombs--;
 		
 		if (theBoard.nonBombs == 0 ) {
+			//game over, win
+			theBoard.playing = false;
 			theTimer.stop();
+			theBoard.allTiles( function(t) {
+				if ( t.status == UNCOVERED ) return;	//don't care about uncovered
+				assert(t.bomb, "Player won, but there is a covered non-bomb");
+				t.setIcon("flag");
+			} );
 			alert('You win!');
+			return;	//need other game-ending code?			
+			
 		}
 		
 		if (bombNeighbors > 0) return;
@@ -231,4 +267,15 @@ function Counter() {
 	this.increment = function() {
 		
 	}
+}
+
+//see: http://stackoverflow.com/questions/15313418/javascript-assert
+function assert(condition, message) {
+    if (!condition) {
+        message = message || "Assertion failed";
+        if (typeof Error !== "undefined") {
+            throw new Error(message);
+        }
+        throw message; // Fallback
+    }
 }
