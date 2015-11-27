@@ -9,16 +9,27 @@ function init() {
 //	alert('loading');
 	rows = 3;
 	cols = 4;
-	var board = new Board(rows, cols);
-};
+	var theBoard = new Board();
+	theBoard.newBoard(rows, cols);
+}
 
 function Board(r,c) {
 	this.tableElt = document.getElementById("grid");
-	this.buildBoard(r,c)
-};
+	this.numrows = null;
+	this.numcols = null;
+}
 
 Board.prototype = {
-	buildBoard: function(r,c) {
+	newBoard: function(r,c) {
+		if ( this.numrows == r && this.numcols == c ) {
+			//no need for new board
+			for ( i=0 ; i < this.numrows ; i++ ) {
+				for ( j=0 ; j < this.numcols ; j++ ) {
+					this.board[i][j].reset();
+				}
+			}
+			return;
+		}
 		this.numrows = r
 		this.numcols = c
 		this.board = []	//array for tiles
@@ -29,7 +40,8 @@ Board.prototype = {
 			this.tableElt.removeChild(ch);
 			ch = this.tableElt.firstChild;
 		}
-	
+		
+		//build new the board
 		for ( i=0 ; i < this.numrows ; i++ ) {
 			var newRow = []
 			var newRowElt = document.createElement('tr');
@@ -44,7 +56,7 @@ Board.prototype = {
 			this.tableElt.appendChild(newRowElt);
 		}
 	}
-}
+};
 
 //values of Tile.status
 var UNCOVERED = -1;
