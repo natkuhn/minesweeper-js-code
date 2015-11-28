@@ -6,6 +6,7 @@
 	* TODO: needs a way to start a new game
 	* TODO: needs settings, especially board size including custom
 	* TODO: needs timer, counter (meaning it needs fonts)
+	* TODO: sizes: beginner 9x9 with 10 bombs; intermediate 16x16 with 40 bombs; expert 16x30 with 99 bombs
 */
 
 var theTimer;
@@ -15,12 +16,11 @@ var theBoard;
 onload = init;
 
 function init() {
-//	alert('loading');
-	var rows = 9;
-	var cols = 9;
-	var bombs = 10;
-	theTimer = new Timer();
-	theCounter = new Counter();
+	var rows = 16;
+	var cols = 16;
+	var bombs = 40;
+	theTimer = new Timer("timer");
+	theCounter = new Counter("counter");
 	theBoard = new Board();
 	theBoard.newBoard(rows, cols);
 	theBoard.setBombs( bombs );
@@ -36,7 +36,7 @@ function Board(r,c) {
 	
 	this.newBoard = function(r,c) {
 		this.playing = true;	//set to false at end of game
-		theTimer.reset();
+		theTimer.setTo(0);
 		this.playing = true;
 		
 		if ( this.numrows == r && this.numcols == c ) {
@@ -160,6 +160,7 @@ Tile.prototype = {
 	
 	leftClick: function(evtObj) {
 		console.log('mouseclick in tile '+this.myRow+','+this.myCol);
+		theTimer.going();	//make sure the timer is going
 		//ignore clicks if game over, or on flags or already uncovered
 		if ( !theBoard.playing || this.status == FLAG || this.status == UNCOVERED ) return;
 		if ( this.bomb ) {	//oops, you lose
@@ -235,37 +236,56 @@ Tile.prototype = {
 	}
 }
 
-function Timer() {
-	//make the timer here?
-	this.reset = function() {
-		this.going = false;
-		//etc
+function Counter(element) {
+	if (element) this.myElement = document.getElementById(element);
+	
+	this.show = function() {
+		if (this.myValue >= 0) str = ("00"+this.myValue).slice(-3);
+		else var str = "-"+("0"+(-this.myValue)).slice(-2);
+		this.myElement.innerHTML = str
 	}
 	
-	this.start = function() {
-		this.going = true;
-		//etc
-	}
-	
-	this.stop = function() {
-		this.going = false;
-	}
-
-}
-
-function Counter() {
 	this.setTo = function(k) {
-		
+		this.myValue = k;
+		this.show();
 	}
 	
 	this.decrement = function() {
-		
+		this.myValue--;
+		this.show();
 	}
 	
 	this.increment = function() {
-		
+		this.myValue++;
+		this.show();
 	}
 }
+
+function Timer(element) {
+	if (element) this.myElement = document.getElementById(element);
+	var self = this;
+	this.timerFn = function() { self.increment() };
+	this.timerObj = null
+
+	this.reset = function() {
+		this.setTo(0);
+	}
+	
+	this.start = function() {
+		this.timerObj = window.setInterval(this.timerFn, 1000);
+	}
+	
+	this.going = function() {
+		if (! this.timerObj ) this.start();
+	}
+	
+	this.stop = function() {
+		window.clearInterval(this.timerObj);
+		this.timerObj = null;
+	}
+}
+
+Timer.prototype = new Counter(null)
 
 //see: http://stackoverflow.com/questions/15313418/javascript-assert
 function assert(condition, message) {

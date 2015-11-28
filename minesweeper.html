@@ -17,6 +17,10 @@
 				border: 	0px;
 			}
 			
+			.auto-margins {
+				margin: auto auto auto auto 
+			}
+			
 			.covered {
 				background:	url("graphics/covered.gif") no-repeat center center;
 			}
@@ -29,11 +33,6 @@
 				background:	url("graphics/question.gif") no-repeat center center;
 			}
 			
-/*			.icon3 {
-				background:	url("graphics/covered.gif") no-repeat center center;
-			}
-*/
-
 			.xb {
 				background:	url("graphics/xb.gif") no-repeat center center;
 			}
@@ -82,19 +81,48 @@
 				background:	url("graphics/n8.gif") no-repeat center center;
 			}
 			
+			.neutral {
+				background:	url("graphics/neutral.gif") no-repeat center center;
+				width:		26px;
+				height:		26px;
+				padding:	0px;
+				border: 	0px;
+			}
+			
+			.readout {
+				font-family:'digital_dream_fat_narrowRg', monospace;
+				font-size:	18px;
+				color:	#ff0000;
+				text-align:			center;
+				vertical-align:		-2.5px;
+			}
+			
+			.blackbk {
+				background-color:	black;
+			}
+			
+			@font-face {
+				font-family: 'digital_dream_fat_narrowRg';
+				src: url('graphics/DIGITALDREAMFATNARROW-webfont.eot');
+				src: url('graphics/DIGITALDREAMFATNARROW-webfont.eot?#iefix') format('embedded-opentype'),
+					 url('graphics/DIGITALDREAMFATNARROW-webfont.woff') format('woff'),
+					 url('graphics/DIGITALDREAMFATNARROW-webfont.ttf') format('truetype');
+				font-weight: normal;
+				font-style: normal;
+			}
+			
 		</style>
 	</head>
 	<body>
-		<table id="grid">
-			<tr>
-				<td class="icon0"></td><td class="icon1"></td><td></td>
-			</tr>
-			<tr>
-				<td></td><td></td><td></td>
-			</tr>
-			<tr>
-				<td></td><td></td><td></td>
-			</tr>
+		<table id="box">
+			<tr><td><table class="auto-margins"><tr>
+				<td class="blackbk"><span class="readout" id="counter">-02</span></td>
+				<td class="neutral"></td>
+				<td class="blackbk"><span class="readout" id="timer">000</span></td>
+			</tr></table></td></tr>
+			<tr><td>
+				<table id="grid" class="auto-margins"></table>
+			</td></tr>
 		</table>
 		<script src="minesweeper.js"></script>
 	</body>
