@@ -15,9 +15,9 @@ var theBoard;
 onload = init;
 
 function init() {
-	var rows = 9;
-	var cols = 3;
-	var bombs = 10;
+	var rows = 16;
+	var cols = 16;
+	var bombs = 40;
 	theTimer = new Timer("timer");
 	theCounter = new Counter("counter");
 	theBoard = new Board();
