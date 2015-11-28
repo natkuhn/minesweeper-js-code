@@ -5,7 +5,6 @@
 	
 	* TODO: needs a way to start a new game
 	* TODO: needs settings, especially board size including custom
-	* TODO: needs timer, counter (meaning it needs fonts)
 	* TODO: sizes: beginner 9x9 with 10 bombs; intermediate 16x16 with 40 bombs; expert 16x30 with 99 bombs
 */
 
@@ -17,7 +16,7 @@ onload = init;
 
 function init() {
 	var rows = 9;
-	var cols = 9;
+	var cols = 3;
 	var bombs = 10;
 	theTimer = new Timer("timer");
 	theCounter = new Counter("counter");
@@ -25,8 +24,10 @@ function init() {
 	theBoard.newBoard(rows, cols);
 	theBoard.setBombs( bombs );
 	theCounter.setTo( bombs );
-	window.oncontextmenu = function() { return false };	//override context menu, 
-	//per http://stackoverflow.com/questions/2405771/is-right-click-a-javascript-event
+	window.oncontextmenu = function() { return false };	/*override context menu, 
+	per http://stackoverflow.com/questions/2405771/is-right-click-a-javascript-event.
+	Note that post provides an alternate approach to left-vs-right click detection,
+	in case some right-clicks are sneaking through as left-clicks. */
 }
 
 function Board(r,c) {

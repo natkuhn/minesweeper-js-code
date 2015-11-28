@@ -1,7 +1,18 @@
+#box {
+	border-collapse:	collapse;
+	text-align:	center;
+}
+
+#box td {
+	padding:	2px;
+	border-spacing:		0px;
+	border:		3px solid gray;
+}
+
 #grid {
 	border-spacing:	0px;
-	border: 3px solid gray;
-
+	border: 0px;
+	margin: auto auto auto auto;
 }
 
 #grid td {
@@ -11,8 +22,29 @@
 	border: 	0px;
 }
 
-.auto-margins {
-	margin: auto auto auto auto 
+.readout {
+margin: auto auto auto auto;
+	font-family:		'digital_dream_fat_narrowRg', monospace;
+	font-size:			18px;
+	height:				25px;
+	width:				40px;
+	vertical-align:		-3px;
+	color:				#ff0000;
+	background-color:	black;
+}
+
+.readout-nudge {
+	vertical-align:		-4px;
+}
+
+@font-face {
+	font-family: 'digital_dream_fat_narrowRg';
+	src: url('graphics/DIGITALDREAMFATNARROW-webfont.eot');
+	src: url('graphics/DIGITALDREAMFATNARROW-webfont.eot?#iefix') format('embedded-opentype'),
+		 url('graphics/DIGITALDREAMFATNARROW-webfont.woff') format('woff'),
+		 url('graphics/DIGITALDREAMFATNARROW-webfont.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
 }
 
 .covered {
@@ -83,24 +115,3 @@
 	border: 	0px;
 }
 
-.readout {
-	font-family:'digital_dream_fat_narrowRg', monospace;
-	font-size:	18px;
-	color:	#ff0000;
-	text-align:			center;
-	vertical-align:		-2.5px;
-}
-
-.blackbk {
-	background-color:	black;
-}
-
-@font-face {
-	font-family: 'digital_dream_fat_narrowRg';
-	src: url('graphics/DIGITALDREAMFATNARROW-webfont.eot');
-	src: url('graphics/DIGITALDREAMFATNARROW-webfont.eot?#iefix') format('embedded-opentype'),
-		 url('graphics/DIGITALDREAMFATNARROW-webfont.woff') format('woff'),
-		 url('graphics/DIGITALDREAMFATNARROW-webfont.ttf') format('truetype');
-	font-weight: normal;
-	font-style: normal;
-}
