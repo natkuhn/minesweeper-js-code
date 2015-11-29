@@ -252,7 +252,7 @@ function Counter(element) {
 	if (element) this.myElement = document.getElementById(element);
 	
 	this.show = function() {
-		if (this.myValue >= 0) str = ("00"+Math.min(this.myValue,999).slice(-3);
+		if (this.myValue >= 0) var str = ("00"+Math.min(this.myValue,999)).slice(-3);
 		else var str = "-"+("0"+Math.min(-this.myValue,99)).slice(-2);
 		this.myElement.innerHTML = str
 	}
