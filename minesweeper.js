@@ -32,8 +32,17 @@ function init() {
 
 function Board() {
 	this.tableElt = document.getElementById("grid");
+	this.tableElt.onclick = function(e) {
+		e.target.user_tile.leftClick();
+	};
+	this.tableElt.oncontextmenu = function(e) {
+		e.target.user_tile.rightClick();
+	};
+	
 	this.faceElt = document.getElementById("face");
-	this.faceElt.onclick = function() { theBoard.newGame(); };
+	this.faceElt.onclick = function(e) {
+		theBoard.newGame();
+	};
 	
 	this.newGame = function() {
 		this.playing = true;
@@ -125,10 +134,11 @@ function Tile(i,j) {
 	this.myRow = i;
 	this.myCol = j;
 	this.tdElt = document.createElement('td');
+	this.tdElt.user_tile = this;	//link back for event handler
 	
-	var self = this;
+/*	var self = this;
 	this.tdElt.onclick = function(e) { self.leftClick(e) };
-	this.tdElt.oncontextmenu = function(e) { self.rightClick(e) };
+	this.tdElt.oncontextmenu = function(e) { self.rightClick(e) };*/
 	this.reset();
 }
 
