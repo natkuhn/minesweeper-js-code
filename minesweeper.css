@@ -4,9 +4,9 @@
 }
 
 #box td {
-	padding:		2px;
+	padding:		0px;
 	border-spacing:	0px;
-	border:			2px solid gray;
+	border:			2px solid silver;
 }
 
 #grid {
@@ -23,18 +23,13 @@
 }
 
 .readout {
-margin: auto auto auto auto;
+	margin: 			3px auto;
+	width:				44px;
 	font-family:		'digital_dream_fat_narrowRg', monospace;
 	font-size:			18px;
-	height:				25px;
-	width:				40px;
-	vertical-align:		-3px;
+	padding:			5px 0px 2px;
 	color:				#ff0000;
 	background-color:	black;
-}
-
-.readout-nudge {
-	vertical-align:		-4px;
 }
 
 @font-face {
