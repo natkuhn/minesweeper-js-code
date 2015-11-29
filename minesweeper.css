@@ -47,6 +47,25 @@ margin: auto auto auto auto;
 	font-style: normal;
 }
 
+#face {
+	width:		26px;
+	height:		26px;
+/*	padding:	0px;
+	border: 	0px;*/
+}
+
+.neutral {
+	background:	url("graphics/neutral.gif") no-repeat center center;
+}
+
+.happy {
+	background:	url("graphics/happy.gif") no-repeat center center;
+}
+
+.sad {
+	background:	url("graphics/sad.gif") no-repeat center center;
+}
+
 .covered {
 	background:	url("graphics/covered.gif") no-repeat center center;
 }
@@ -105,13 +124,5 @@ margin: auto auto auto auto;
 
 .n8 {
 	background:	url("graphics/n8.gif") no-repeat center center;
-}
-
-.neutral {
-	background:	url("graphics/neutral.gif") no-repeat center center;
-	width:		26px;
-	height:		26px;
-	padding:	0px;
-	border: 	0px;
 }
 

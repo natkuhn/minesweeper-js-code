@@ -6,6 +6,7 @@
 	* TODO: needs a way to start a new game
 	* TODO: needs settings, especially board size including custom
 	* TODO: sizes: beginner 9x9 with 10 bombs; intermediate 16x16 with 40 bombs; expert 16x30 with 99 bombs
+	* TODO: make counter max out a 999, min out at -99
 */
 
 var theTimer;
@@ -21,32 +22,39 @@ function init() {
 	theTimer = new Timer("timer");
 	theCounter = new Counter("counter");
 	theBoard = new Board();
-	theBoard.newBoard(rows, cols);
-	theBoard.setBombs( bombs );
-	theCounter.setTo( bombs );
+	theBoard.makeBoard(rows, cols, bombs);
 	window.oncontextmenu = function() { return false };	/*override context menu, 
 	per http://stackoverflow.com/questions/2405771/is-right-click-a-javascript-event.
 	Note that post provides an alternate approach to left-vs-right click detection,
 	in case some right-clicks are sneaking through as left-clicks. */
+	theBoard.newGame();
 }
 
-function Board(r,c) {
+function Board() {
 	this.tableElt = document.getElementById("grid");
-	this.numrows = null;
-	this.numcols = null;
+	this.faceElt = document.getElementById("face");
+	this.faceElt.onclick = function() { theBoard.newGame(); };
 	
-	this.newBoard = function(r,c) {
-		this.playing = true;	//set to false at end of game
-		theTimer.setTo(0);
+	this.newGame = function() {
 		this.playing = true;
-		
-		if ( this.numrows == r && this.numcols == c ) {
-			//no need for new board
-			this.allTiles( function(t) { t.reset() } );
-			return;
-		}
+		this.allTiles( function(t) { t.reset() } );
+		theBoard.setBombs( this.numBombs );
+		theCounter.setTo( this.numBombs );
+		theTimer.reset();
+		this.setFace("neutral");
+	}
+	
+	this.endGame = function(win) {
+		this.playing = false;	//don't accept more clicks
+		theTimer.stop();
+		if (win) this.setFace("happy");
+		else this.setFace("sad");
+	}
+	
+	this.makeBoard = function(r, c, bombs) {
 		this.numrows = r
 		this.numcols = c
+		this.numBombs = bombs;
 		this.board = []	//array for tiles
 	
 		//clear out the existing table
@@ -91,7 +99,7 @@ function Board(r,c) {
 		if ( i < 0 || i >= this.numrows ) return null;
 		if ( j < 0 || j >= this.numcols ) return null;
 		return this.board[i][j];
-	}
+	};
 	
 	this.allTiles = function(iter) {
 		for ( i=0 ; i < this.numrows ; i++ ) {
@@ -100,6 +108,10 @@ function Board(r,c) {
 			}
 		}
 	};
+	
+	this.setFace = function(str) {
+		this.faceElt.setAttribute("class", str);
+	}
 }
 
 //values of Tile.status
@@ -179,7 +191,7 @@ Tile.prototype = {
 					t.setIcon("nb");
 				} 
 			} );
-			alert('You lose!');
+			theBoard.endGame(false);	//you lose
 		}
 		
 		else {	//not a bomb
@@ -215,9 +227,8 @@ Tile.prototype = {
 				assert(t.bomb, "Player won, but there is a covered non-bomb");
 				t.setIcon("flag");
 			} );
-			alert('You win!');
-			return;	//need other game-ending code?			
-			
+			theBoard.endGame(true);
+			return;
 		}
 		
 		if (bombNeighbors > 0) return;
@@ -241,8 +252,8 @@ function Counter(element) {
 	if (element) this.myElement = document.getElementById(element);
 	
 	this.show = function() {
-		if (this.myValue >= 0) str = ("00"+this.myValue).slice(-3);
-		else var str = "-"+("0"+(-this.myValue)).slice(-2);
+		if (this.myValue >= 0) str = ("00"+Math.min(this.myValue,999).slice(-3);
+		else var str = "-"+("0"+Math.min(-this.myValue,99)).slice(-2);
 		this.myElement.innerHTML = str
 	}
 	
@@ -269,6 +280,7 @@ function Timer(element) {
 	this.timerObj = null
 
 	this.reset = function() {
+		if (this.timerObj) this.stop();
 		this.setTo(0);
 	}
 	
