@@ -6,20 +6,24 @@
 #box td {
 	padding:		0px;
 	border-spacing:	0px;
-	border:			2px solid silver;
+	border:			2px solid gray;
 }
 
 #grid {
 	border-spacing:	0px;
-	border: 0px;
+	border-style:	solid;
+	border-width:		0px 1px 1px 0px;
 	margin: auto auto auto auto;
+    border-collapse: collapse;
 }
 
 #grid td {
 	width:		16px;
 	height:		16px;
 	padding:	0px;
-	border: 	0px;
+	border-style:	solid;
+	border-width:		1px 0px 0px 1px;
+	margin:		0px;
 }
 
 .readout {
@@ -61,8 +65,14 @@
 	background:	url("graphics/sad.gif") no-repeat center center;
 }
 
+/* a weird bug, at least in Chrome, causes this to display one row of pixels on the right and
+bottom in "border-collapse: collapse" mode...  hence the weird stuff with 	border-width:		1px 0px 0px 1px;
+*/
+
 .covered {
-	background:	url("graphics/covered.gif") no-repeat center center;
+	background-color:	LightGray;
+	box-shadow:	1px 1px 1px  White inset, 
+				-1px -1px 1px  Gray inset;
 }
 
 .flag {
@@ -85,39 +95,44 @@
 	background:	url("graphics/nb.gif") no-repeat center center;
 }
 
-.n0 {
-	background:	url("graphics/n0.gif") no-repeat center center;
+.uncover {
+/*	background:		url("graphics/n0.gif") no-repeat center center;
+*/
+	background-color:	LightGray;
+	font-family:	monospace;
+	font-size:		14px;
+	font-weight:	bold
 }
 
 .n1 {
-	background:	url("graphics/n1.gif") no-repeat center center;
+	color:	Blue
 }
 
 .n2 {
-	background:	url("graphics/n2.gif") no-repeat center center;
+	color:	Green
 }
 
 .n3 {
-	background:	url("graphics/n3.gif") no-repeat center center;
+	color:	Red
 }
 
 .n4 {
-	background:	url("graphics/n4.gif") no-repeat center center;
+	color:	DarkBlue
 }
 
 .n5 {
-	background:	url("graphics/n5.gif") no-repeat center center;
+	color:	Maroon
 }
 
 .n6 {
-	background:	url("graphics/n6.gif") no-repeat center center;
+	color:	Teal
 }
 
 .n7 {
-	background:	url("graphics/n7.gif") no-repeat center center;
+	color:	Black
 }
 
 .n8 {
-	background:	url("graphics/n8.gif") no-repeat center center;
+	color:	Gray
 }
 
