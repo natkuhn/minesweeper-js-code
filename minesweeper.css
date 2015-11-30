@@ -85,39 +85,42 @@
 	background:	url("graphics/nb.gif") no-repeat center center;
 }
 
-.n0 {
-	background:	url("graphics/n0.gif") no-repeat center center;
+.uncover {
+	background:		url("graphics/n0.gif") no-repeat center center;
+	font-family:	monospace;
+	font-size:		14px;
+	font-weight:	bold
 }
 
 .n1 {
-	background:	url("graphics/n1.gif") no-repeat center center;
+	color:	Blue
 }
 
 .n2 {
-	background:	url("graphics/n2.gif") no-repeat center center;
+	color:	Green
 }
 
 .n3 {
-	background:	url("graphics/n3.gif") no-repeat center center;
+	color:	Red
 }
 
 .n4 {
-	background:	url("graphics/n4.gif") no-repeat center center;
+	color:	DarkBlue
 }
 
 .n5 {
-	background:	url("graphics/n5.gif") no-repeat center center;
+	color:	Maroon
 }
 
 .n6 {
-	background:	url("graphics/n6.gif") no-repeat center center;
+	color:	Teal
 }
 
 .n7 {
-	background:	url("graphics/n7.gif") no-repeat center center;
+	color:	Black
 }
 
 .n8 {
-	background:	url("graphics/n8.gif") no-repeat center center;
+	color:	Gray
 }
 

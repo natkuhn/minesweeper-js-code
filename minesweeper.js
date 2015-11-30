@@ -137,6 +137,7 @@ Tile.prototype = {
 		this.bomb = false
 		this.status = COVERED
 		this.bombNeighbors = -1;	//unrevealed
+		this.tdElt.textContent = ""
 		this.setIcon("covered");
 	},
 	
@@ -214,7 +215,15 @@ Tile.prototype = {
 		addIn( theBoard.getTile( i+1 , j+1 ) );
 		
 		this.status = UNCOVERED;
-		this.setIcon("n"+bombNeighbors);
+		
+		
+		if (bombNeighbors > 0) {
+			this.setIcon("uncover n"+bombNeighbors);
+			this.tdElt.textContent = ""+bombNeighbors;
+		} else {
+			this.setIcon("uncover");
+			this.tdElt.textContent = ""
+		}
 		
 		theBoard.nonBombs--;
 		
@@ -254,7 +263,7 @@ function Counter(element) {
 	this.show = function() {
 		if (this.myValue >= 0) var str = ("00"+Math.min(this.myValue,999)).slice(-3);
 		else var str = "-"+("0"+Math.min(-this.myValue,99)).slice(-2);
-		this.myElement.innerHTML = str
+		this.myElement.textContent = str	//for IE<9, use innerHTML
 	}
 	
 	this.setTo = function(k) {
