@@ -3,10 +3,12 @@
 	
 	v0.1 11/27/15: handles left click, right click, and standard game play
 	
-	* TODO: needs a way to start a new game
 	* TODO: needs settings, especially board size including custom
-	* TODO: sizes: beginner 9x9 with 10 bombs; intermediate 16x16 with 40 bombs; expert 16x30 with 99 bombs
-	* TODO: make counter max out a 999, min out at -99
+	* TODO: board sizes: beginner 9x9 with 10 bombs; intermediate 16x16 with 40 bombs; expert 16x30 with 99 bombs
+	* TODO: make text, icons etc in tiles non-selectable if possible
+	* TODO: make "m" tile sizes, make sure css works for it (some class descriptors missing)
+	* TODO: check shadows on covered large tiles
+	* TODO: eliminate unneeded CSS
 */
 
 var theTimer;
@@ -19,10 +21,11 @@ function init() {
 	var rows = 16;
 	var cols = 16;
 	var bombs = 40;
+	var tileSize = "l";
 	theTimer = new Timer("timer");
 	theCounter = new Counter("counter");
 	theBoard = new Board();
-	theBoard.makeBoard(rows, cols, bombs);
+	theBoard.makeBoard(rows, cols, bombs, tileSize);
 	window.oncontextmenu = function() { return false };	/*override context menu, 
 	per http://stackoverflow.com/questions/2405771/is-right-click-a-javascript-event.
 	Note that post provides an alternate approach to left-vs-right click detection,
@@ -32,12 +35,6 @@ function init() {
 
 function Board() {
 	this.tableElt = document.getElementById("grid");
-	this.tableElt.onclick = function(e) {
-		e.target.user_tile.leftClick();
-	};
-	this.tableElt.oncontextmenu = function(e) {
-		e.target.user_tile.rightClick();
-	};
 	
 	this.faceElt = document.getElementById("face");
 	this.faceElt.onclick = function(e) {
@@ -60,10 +57,12 @@ function Board() {
 		else this.setFace("sad");
 	}
 	
-	this.makeBoard = function(r, c, bombs) {
+	this.makeBoard = function(r, c, bombs, tileSize) {
 		this.numrows = r
 		this.numcols = c
 		this.numBombs = bombs;
+		this.tileSize = tileSize;
+		this.tableElt.setAttribute("class", "tiles-"+this.tileSize)
 		this.board = []	//array for tiles
 	
 		//clear out the existing table
@@ -134,8 +133,16 @@ function Tile(i,j) {
 	this.myRow = i;
 	this.myCol = j;
 	this.tdElt = document.createElement('td');
-	this.tdElt.user_tile = this;	//link back for event handler
-	
+//	this.tdElt.user_tile = this;	//link back for event handler
+
+	var self = this;
+	this.tdElt.onclick = function(e) {
+		self.leftClick();
+	};
+	this.tdElt.oncontextmenu = function(e) {
+		self.rightClick();
+	};
+
 /*	var self = this;
 	this.tdElt.onclick = function(e) { self.leftClick(e) };
 	this.tdElt.oncontextmenu = function(e) { self.rightClick(e) };*/
@@ -147,12 +154,7 @@ Tile.prototype = {
 		this.bomb = false
 		this.status = COVERED
 		this.bombNeighbors = -1;	//unrevealed
-		this.tdElt.textContent = ""
-		this.setIcon("covered");
-	},
-	
-	setIcon: function(iconName) {
-		this.tdElt.setAttribute("class", iconName);
+		this.setContent("covered-" + theBoard.tileSize, "");
 	},
 	
 	setBomb: function(v) {
@@ -164,19 +166,19 @@ Tile.prototype = {
 		if ( !theBoard.playing || this.status == UNCOVERED ) return false;
 		if ( this.status == COVERED ) {
 			theCounter.decrement();
+			this.setContent("covered-" + theBoard.tileSize, this.iconHTML("flag"));
 			this.status = FLAG;
-			this.setIcon("flag");
 			return false;
 		}
 		if ( this.status == FLAG ) {	//there could be a setting to go straight back to covered w/o going through ?
 			theCounter.increment();
+			this.setContent("covered-" + theBoard.tileSize, "?");
 			this.status = QUESTION;
-			this.setIcon("question");
 			return false;
 		}
 		if ( this.status == QUESTION ) {
+			this.setContent("covered-" + theBoard.tileSize, "");
 			this.status = COVERED;
-			this.setIcon("covered");
 			return false;
 		}
 		assert(false, "Tile has invalid status: "+this.status);
@@ -188,7 +190,7 @@ Tile.prototype = {
 		//ignore clicks if game over, or on flags or already uncovered
 		if ( !theBoard.playing || this.status == FLAG || this.status == UNCOVERED ) return;
 		if ( this.bomb ) {	//oops, you lose
-			this.setIcon("xb");
+			this.setContent("redsquare-" + theBoard.tileSize, this.iconHTML("bomb"));
 			this.status = UNCOVERED;
 			theTimer.stop()
 			theCounter.decrement();
@@ -196,10 +198,10 @@ Tile.prototype = {
 			theBoard.playing = false;
 			theBoard.allTiles( function(t) {
 				if ( t.status == UNCOVERED ) return;
-				if ( t.bomb ) t.setIcon("uxb");
+				if ( t.bomb ) t.setContent("uncovered-" + theBoard.tileSize, t.iconHTML("bomb"));
 				else /*covered non-bomb*/ if (t.status == FLAG) {
 					theCounter.increment();		//counter should show only correct guesses
-					t.setIcon("nb");
+					t.setContent("uncovered-" + theBoard.tileSize, t.iconHTML("bombx"));
 				} 
 			} );
 			theBoard.endGame(false);	//you lose
@@ -227,13 +229,8 @@ Tile.prototype = {
 		this.status = UNCOVERED;
 		
 		
-		if (bombNeighbors > 0) {
-			this.setIcon("uncover n"+bombNeighbors);
-			this.tdElt.textContent = ""+bombNeighbors;
-		} else {
-			this.setIcon("uncover");
-			this.tdElt.textContent = ""
-		}
+		if (bombNeighbors > 0) this.setContent("uncovered-" + theBoard.tileSize + " n"+bombNeighbors, ""+bombNeighbors);
+		else this.setContent("uncovered-" + theBoard.tileSize, "");
 		
 		theBoard.nonBombs--;
 		
@@ -244,7 +241,7 @@ Tile.prototype = {
 			theBoard.allTiles( function(t) {
 				if ( t.status == UNCOVERED ) return;	//don't care about uncovered
 				assert(t.bomb, "Player won, but there is a covered non-bomb");
-				t.setIcon("flag");
+				t.setContent("covered-" + theBoard.tileSize, t.iconHTML("flag"));
 			} );
 			theBoard.endGame(true);
 			return;
@@ -264,6 +261,16 @@ Tile.prototype = {
 				if (x.bomb) bombNeighbors++;
 			}
 		}
+	},
+	
+	setContent: function(className, html) {
+		this.tdElt.setAttribute("class", className);
+		this.tdElt.innerHTML = html;
+	},
+	
+	iconHTML: function(name) {
+		return '<div class="' + name + '-' + theBoard.tileSize + '"><img src="graphics/' + name + '-' + 
+			theBoard.tileSize + '.png" /></div>';
 	}
 }
 

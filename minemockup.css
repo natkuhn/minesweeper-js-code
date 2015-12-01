@@ -1,0 +1,165 @@
+#box {
+	border-collapse:	collapse;
+	text-align:	center;
+}
+
+#box td {
+	padding:		0px;
+	border-spacing:	0px;
+	border:			2px solid gray;
+}
+
+#grid {
+	border-spacing:	0px;
+	border-width:		0px;
+	margin: auto auto auto auto;
+    border-collapse: collapse;
+}
+
+#grid td {
+	width:		16px;
+	height:		16px;
+	padding:	0px 0px 0px 0px;
+	border-width:		0px;
+	margin:		0px 0px 0px 0px;
+}
+
+.bomb-icon-s {
+	width:		13px;
+	height:		13px;
+	position:	relative;
+	top:		1px;
+	left:		2px;
+}
+
+.readout {
+	margin: 			3px auto;
+	width:				44px;
+	font-family:		'digital_dream_fat_narrowRg', monospace;
+	font-size:			18px;
+	padding:			5px 0px 2px;
+	color:				#ff0000;
+	background-color:	black;
+}
+
+@font-face {
+	font-family: 'digital_dream_fat_narrowRg';
+	src: url('graphics/DIGITALDREAMFATNARROW-webfont.eot');
+	src: url('graphics/DIGITALDREAMFATNARROW-webfont.eot?#iefix') format('embedded-opentype'),
+		 url('graphics/DIGITALDREAMFATNARROW-webfont.woff') format('woff'),
+		 url('graphics/DIGITALDREAMFATNARROW-webfont.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+#face {
+	width:		26px;
+	height:		26px;
+/*	padding:	0px;
+	border: 	0px;*/
+}
+
+.neutral {
+	background:	url("graphics/neutral.gif") no-repeat center center;
+}
+
+.happy {
+	background:	url("graphics/happy.gif") no-repeat center center;
+}
+
+.sad {
+	background:	url("graphics/sad.gif") no-repeat center center;
+}
+
+/* a weird bug, at least in Chrome, causes this to display one row of pixels on the right and
+bottom in "border-collapse: collapse" mode...  hence the weird stuff with 	border-width:		1px 0px 0px 1px;
+*/
+
+.covered {
+	background-color:	LightGray;
+	box-shadow:	2px 2px 1px  White inset, 
+				-2px -2px 1px  Gray inset;
+}
+
+.coveredx {
+	background-color:	LightGray;
+/*	box-shadow:	2px 2px 1px  White inset, 
+				-2px -2px 1px  Gray inset;*/
+	font-family:	monospace;
+	font-size:		6px;
+}
+
+
+
+.flag {
+	background:	url("graphics/flag.gif") no-repeat center center;
+}
+
+.question {
+	background:	url("graphics/question.gif") no-repeat center center;
+}
+
+.xb {
+	background:	url("graphics/xb.gif") no-repeat center center;
+}
+
+.uxb {
+	background:	url("graphics/uxb.gif") no-repeat center center;
+}
+
+.nb {
+	background:	url("graphics/nb.gif") no-repeat center center;
+}
+
+.uncover {
+/*	background:		url("graphics/n0.gif") no-repeat center center;
+*/
+	background-color:	LightGray;
+	box-shadow:	1px 1px 0px  Gray inset;
+	font-family:	monospace;
+	font-size:		14px;
+	font-weight:	bold
+}
+
+.blown {
+/*	background:		url("graphics/n0.gif") no-repeat center center;
+*/
+	background-color:	Red;
+	box-shadow:	1px 1px 0px  Gray inset;
+	font-family:	monospace;
+	font-size:		14px;
+	font-weight:	bold
+}
+
+.n1 {
+	color:	Blue
+}
+
+.n2 {
+	color:	Green
+}
+
+.n3 {
+	color:	Red
+}
+
+.n4 {
+	color:	DarkBlue
+}
+
+.n5 {
+	color:	Maroon
+}
+
+.n6 {
+	color:	Teal
+}
+
+.n7 {
+	color:	Black
+}
+
+.n8 {
+	color:	Gray
+}
+

@@ -10,19 +10,149 @@
 }
 
 #grid {
-	border-spacing:	0px;
+	border-spacing:		0px;
 	border-width:		0px;
-	margin: auto auto auto auto;
-    border-collapse: collapse;
+	margin: 			auto auto auto auto;
+	font-family:	monospace;
+	font-weight:	bold
 }
 
 #grid td {
-	width:		16px;
-	height:		16px;
-	padding:	0px;
+	padding:			0px;
 	border-width:		0px;
-	margin:		0px;
+	margin:				0px;
 }
+
+.tiles-s td {
+	width:			16px;
+	height:			16px;
+	font-size:		14px;
+}
+
+.tiles-m td {
+	width:			24px;
+	height:			24px;
+	font-size:		20px;
+}
+
+.tiles-l td {
+	width:			32px;
+	height:			32px;
+	font-size:		28px;
+}
+
+.bomb-s, .bombx-s {
+	width:		13px;
+	height:		13px;
+	position:	relative;
+	top:		1px;
+	left:		2px;
+}
+
+.bomb-l, .bombx-l {
+	width:		26px;
+	height:		26px;
+	position:	relative;
+	top:		1px;
+	left:		4px;
+}
+
+.flag-s {
+	width:		13px;
+	height:		13px;
+	position:	relative;
+	top:		-1px;
+	left:		1px;
+}
+
+.flag-l {
+	width:		26px;
+	height:		26px;
+	position:	relative;
+	top:		-2px;
+	left:		2px;
+}
+
+.redsquare-s {
+	background-color:	Red;
+	box-shadow:	1px 1px 0px  Gray inset;
+}
+
+.redsquare-m {
+	background-color:	Red;
+	box-shadow:	1px 1px 0px  Gray inset;
+}
+
+.redsquare-l {
+	background-color:	Red;
+	box-shadow:	1px 1px 0px  Gray inset;
+}
+
+.covered-s {
+	background-color:	LightGray;
+	box-shadow:	2px 2px 1px  White inset, 
+				-2px -2px 1px  Gray inset;
+}
+
+.covered-m {
+	background-color:	LightGray;
+	box-shadow:	2px 2px 1px  White inset, 
+				-2px -2px 1px  Gray inset;
+}
+
+.covered-l {
+	background-color:	LightGray;
+	box-shadow:	2px 2px 1px  White inset, 
+				-2px -2px 1px  Gray inset;
+}
+
+.uncovered-s {
+	background-color:	LightGray;
+	box-shadow:	1px 1px 0px  Gray inset;
+}
+
+.uncovered-m {
+	background-color:	LightGray;
+	box-shadow:	1px 1px 0px  Gray inset;
+}
+
+.uncovered-l {
+	background-color:	LightGray;
+	box-shadow:	2px 2px 0px  Gray inset;
+}
+
+.n1 {
+	color:	Blue
+}
+
+.n2 {
+	color:	Green
+}
+
+.n3 {
+	color:	Red
+}
+
+.n4 {
+	color:	DarkBlue
+}
+
+.n5 {
+	color:	Maroon
+}
+
+.n6 {
+	color:	Teal
+}
+
+.n7 {
+	color:	Black
+}
+
+.n8 {
+	color:	Gray
+}
+
 
 .readout {
 	margin: 			3px auto;
@@ -64,74 +194,5 @@
 }
 
 /* a weird bug, at least in Chrome, causes this to display one row of pixels on the right and
-bottom in "border-collapse: collapse" mode...  hence the weird stuff with 	border-width:		1px 0px 0px 1px;
+bottom in "border-collapse: collapse" mode...  
 */
-
-.covered {
-	background-color:	LightGray;
-	box-shadow:	2px 2px 1px  White inset, 
-				-2px -2px 1px  Gray inset;
-}
-
-.flag {
-	background:	url("graphics/flag.gif") no-repeat center center;
-}
-
-.question {
-	background:	url("graphics/question.gif") no-repeat center center;
-}
-
-.xb {
-	background:	url("graphics/xb.gif") no-repeat center center;
-}
-
-.uxb {
-	background:	url("graphics/uxb.gif") no-repeat center center;
-}
-
-.nb {
-	background:	url("graphics/nb.gif") no-repeat center center;
-}
-
-.uncover {
-/*	background:		url("graphics/n0.gif") no-repeat center center;
-*/
-	background-color:	LightGray;
-	box-shadow:	1px 1px 0px  Gray inset;
-	font-family:	monospace;
-	font-size:		14px;
-	font-weight:	bold
-}
-
-.n1 {
-	color:	Blue
-}
-
-.n2 {
-	color:	Green
-}
-
-.n3 {
-	color:	Red
-}
-
-.n4 {
-	color:	DarkBlue
-}
-
-.n5 {
-	color:	Maroon
-}
-
-.n6 {
-	color:	Teal
-}
-
-.n7 {
-	color:	Black
-}
-
-.n8 {
-	color:	Gray
-}
-
