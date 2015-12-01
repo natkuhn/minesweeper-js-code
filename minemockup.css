@@ -24,6 +24,14 @@
 	margin:		0px 0px 0px 0px;
 }
 
+.bomb-icon-s {
+	width:		13px;
+	height:		13px;
+	position:	relative;
+	top:		1px;
+	left:		2px;
+}
+
 .readout {
 	margin: 			3px auto;
 	width:				44px;
@@ -107,6 +115,16 @@ bottom in "border-collapse: collapse" mode...  hence the weird stuff with 	borde
 /*	background:		url("graphics/n0.gif") no-repeat center center;
 */
 	background-color:	LightGray;
+	box-shadow:	1px 1px 0px  Gray inset;
+	font-family:	monospace;
+	font-size:		14px;
+	font-weight:	bold
+}
+
+.blown {
+/*	background:		url("graphics/n0.gif") no-repeat center center;
+*/
+	background-color:	Red;
 	box-shadow:	1px 1px 0px  Gray inset;
 	font-family:	monospace;
 	font-size:		14px;

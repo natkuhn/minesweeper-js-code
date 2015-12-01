@@ -3,10 +3,9 @@
 	
 	v0.1 11/27/15: handles left click, right click, and standard game play
 	
-	* TODO: needs a way to start a new game
 	* TODO: needs settings, especially board size including custom
 	* TODO: sizes: beginner 9x9 with 10 bombs; intermediate 16x16 with 40 bombs; expert 16x30 with 99 bombs
-	* TODO: make counter max out a 999, min out at -99
+	* TODO: make text in tiles non-selectable
 */
 
 var theTimer;
@@ -19,10 +18,11 @@ function init() {
 	var rows = 16;
 	var cols = 16;
 	var bombs = 40;
+	var tileSize = "l";
 	theTimer = new Timer("timer");
 	theCounter = new Counter("counter");
 	theBoard = new Board();
-	theBoard.makeBoard(rows, cols, bombs);
+	theBoard.makeBoard(rows, cols, bombs, tileSize);
 	window.oncontextmenu = function() { return false };	/*override context menu, 
 	per http://stackoverflow.com/questions/2405771/is-right-click-a-javascript-event.
 	Note that post provides an alternate approach to left-vs-right click detection,
@@ -60,10 +60,12 @@ function Board() {
 		else this.setFace("sad");
 	}
 	
-	this.makeBoard = function(r, c, bombs) {
+	this.makeBoard = function(r, c, bombs, tileSize) {
 		this.numrows = r
 		this.numcols = c
 		this.numBombs = bombs;
+		this.tileSize = tileSize;
+		this.tableElt.setAttribute("class", "tiles-"+this.tileSize)
 		this.board = []	//array for tiles
 	
 		//clear out the existing table
@@ -147,12 +149,12 @@ Tile.prototype = {
 		this.bomb = false
 		this.status = COVERED
 		this.bombNeighbors = -1;	//unrevealed
-		this.tdElt.textContent = ""
-		this.setIcon("covered");
+		this.setContent("covered", "");
 	},
 	
-	setIcon: function(iconName) {
-		this.tdElt.setAttribute("class", iconName);
+	setContent: function(className, html) {
+		this.tdElt.setAttribute("class", className);
+		this.tdElt.innerHTML = html;
 	},
 	
 	setBomb: function(v) {
@@ -171,12 +173,12 @@ Tile.prototype = {
 		if ( this.status == FLAG ) {	//there could be a setting to go straight back to covered w/o going through ?
 			theCounter.increment();
 			this.status = QUESTION;
-			this.setIcon("question");
+			this.setContent("covered", "?");
 			return false;
 		}
 		if ( this.status == QUESTION ) {
 			this.status = COVERED;
-			this.setIcon("covered");
+			this.setContent("covered", "");
 			return false;
 		}
 		assert(false, "Tile has invalid status: "+this.status);
@@ -227,13 +229,8 @@ Tile.prototype = {
 		this.status = UNCOVERED;
 		
 		
-		if (bombNeighbors > 0) {
-			this.setIcon("uncover n"+bombNeighbors);
-			this.tdElt.textContent = ""+bombNeighbors;
-		} else {
-			this.setIcon("uncover");
-			this.tdElt.textContent = ""
-		}
+		if (bombNeighbors > 0) this.setContent("uncovered n"+bombNeighbors, ""+bombNeighbors);
+		else this.setContent("uncovered", "");
 		
 		theBoard.nonBombs--;
 		
