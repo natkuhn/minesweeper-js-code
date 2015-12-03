@@ -6,9 +6,9 @@
 	* TODO: needs settings, especially board size including custom
 	* TODO: board sizes: beginner 9x9 with 10 bombs; intermediate 16x16 with 40 bombs; expert 16x30 with 99 bombs
 	* TODO: make text, icons etc in tiles non-selectable if possible
-	* TODO: make "m" tile sizes, make sure css works for it (some class descriptors missing)
-	* TODO: check shadows on covered large tiles
 	* TODO: eliminate unneeded CSS
+	* TODO: needs page with settings that calls as iframe
+	* TODO: newboard should validate parameters?
 */
 
 var theTimer;
@@ -18,19 +18,30 @@ var theBoard;
 onload = init;
 
 function init() {
-	var rows = 16;
-	var cols = 16;
-	var bombs = 40;
-	var tileSize = "s";
+/*	var rows = getURLParameter("rows", 16);
+	var cols = getURLParameter("columns", 16);
+	var bombs = getURLParameter("bombs", 40);
+	var tileSize = getURLParameter("tilesize", "m");
+*/
+	
 	theTimer = new Timer("timer");
 	theCounter = new Counter("counter");
 	theBoard = new Board();
-	theBoard.makeBoard(rows, cols, bombs, tileSize);
+	theBoard.makeBoard(	1 * getURLParameter("rows", 16), 
+						1 * getURLParameter("columns", 16), 
+						1 * getURLParameter("bombs", 40),
+						getURLParameter("tilesize", "m") );
 	window.oncontextmenu = function() { return false };	/*override context menu, 
 	per http://stackoverflow.com/questions/2405771/is-right-click-a-javascript-event.
 	Note that post provides an alternate approach to left-vs-right click detection,
 	in case some right-clicks are sneaking through as left-clicks. */
 	theBoard.newGame();
+}
+
+//modified slightly (to include default value) from http://stackoverflow.com/questions/11582512/how-to-get-url-parameters-with-javascript/
+function getURLParameter(name, defaultVal) {
+  return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1]
+  	.replace(/\+/g, '%20'))||defaultVal
 }
 
 function Board() {
