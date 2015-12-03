@@ -4,23 +4,21 @@
 }
 
 #box td {
-	padding:		0px;
 	border-spacing:	0px;
 	border:			2px solid gray;
 }
 
 #grid {
-	border-spacing:		0px;
-	border-width:		0px;
-	margin: 			auto auto auto auto;
+	border-spacing:	0px;
+	border-width:	0px;
+	margin: 		0px;
 	font-family:	monospace;
 	font-weight:	bold
 }
 
 #grid td {
-	padding:			0px;
-	border-width:		0px;
-	margin:				0px;
+	border-width:	0px;
+	margin:			0px;
 }
 
 .tiles-s td {
@@ -49,6 +47,14 @@
 	left:		2px;
 }
 
+.bomb-m, .bombx-m {
+	width:		20px;
+	height:		20px;
+	position:	relative;
+	top:		0px;
+	left:		2px;
+}
+
 .bomb-l, .bombx-l {
 	width:		26px;
 	height:		26px;
@@ -65,6 +71,14 @@
 	left:		1px;
 }
 
+.flag-m {
+	width:		20px;
+	height:		20px;
+	position:	relative;
+	top:		-1px;
+	left:		1px;
+}
+
 .flag-l {
 	width:		26px;
 	height:		26px;
@@ -73,37 +87,22 @@
 	left:		2px;
 }
 
-.redsquare-s {
-	background-color:	Red;
-	box-shadow:	1px 1px 0px  Gray inset;
-}
-
-.redsquare-m {
-	background-color:	Red;
-	box-shadow:	1px 1px 0px  Gray inset;
-}
-
-.redsquare-l {
-	background-color:	Red;
-	box-shadow:	1px 1px 0px  Gray inset;
-}
-
 .covered-s {
 	background-color:	LightGray;
-	box-shadow:	2px 2px 1px  White inset, 
-				-2px -2px 1px  Gray inset;
+	box-shadow:	2px 2px 3px  White inset, 
+				-2px -2px 3px  Gray inset;
 }
 
 .covered-m {
 	background-color:	LightGray;
-	box-shadow:	2px 2px 1px  White inset, 
-				-2px -2px 1px  Gray inset;
+	box-shadow:	2px 2px 5px  White inset, 
+				-2px -2px 5px  Gray inset;
 }
 
 .covered-l {
 	background-color:	LightGray;
-	box-shadow:	2px 2px 1px  White inset, 
-				-2px -2px 1px  Gray inset;
+	box-shadow:	2px 2px 6px  White inset, 
+				-2px -2px 6px  Gray inset;
 }
 
 .uncovered-s {
@@ -118,6 +117,21 @@
 
 .uncovered-l {
 	background-color:	LightGray;
+	box-shadow:	2px 2px 0px  Gray inset;
+}
+
+.redsquare-s {
+	background-color:	Red;
+	box-shadow:	1px 1px 0px  Gray inset;
+}
+
+.redsquare-m {
+	background-color:	Red;
+	box-shadow:	1px 1px 0px  Gray inset;
+}
+
+.redsquare-l {
+	background-color:	Red;
 	box-shadow:	2px 2px 0px  Gray inset;
 }
 
@@ -177,8 +191,6 @@
 #face {
 	width:		26px;
 	height:		26px;
-/*	padding:	0px;
-	border: 	0px;*/
 }
 
 .neutral {

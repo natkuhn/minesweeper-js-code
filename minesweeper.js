@@ -21,7 +21,7 @@ function init() {
 	var rows = 16;
 	var cols = 16;
 	var bombs = 40;
-	var tileSize = "l";
+	var tileSize = "s";
 	theTimer = new Timer("timer");
 	theCounter = new Counter("counter");
 	theBoard = new Board();
