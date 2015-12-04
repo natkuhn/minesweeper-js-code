@@ -18,12 +18,6 @@ var theBoard;
 onload = init;
 
 function init() {
-/*	var rows = getURLParameter("rows", 16);
-	var cols = getURLParameter("columns", 16);
-	var bombs = getURLParameter("bombs", 40);
-	var tileSize = getURLParameter("tilesize", "m");
-*/
-	
 	theTimer = new Timer("timer");
 	theCounter = new Counter("counter");
 	theBoard = new Board();
