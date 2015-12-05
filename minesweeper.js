@@ -21,15 +21,23 @@ function init() {
 	theTimer = new Timer("timer");
 	theCounter = new Counter("counter");
 	theBoard = new Board();
-	theBoard.makeBoard(	1 * getURLParameter("rows", 16), 
-						1 * getURLParameter("columns", 16), 
-						1 * getURLParameter("bombs", 40),
-						getURLParameter("tilesize", "m") );
 	window.oncontextmenu = function() { return false };	/*override context menu, 
 	per http://stackoverflow.com/questions/2405771/is-right-click-a-javascript-event.
 	Note that post provides an alternate approach to left-vs-right click detection,
 	in case some right-clicks are sneaking through as left-clicks. */
-	theBoard.newGame();
+	
+	initControls(); 
+/*	this.p = new Params(1 * getURLParameter("rows", 16), 
+						1 * getURLParameter("columns", 16), 
+						1 * getURLParameter("bombs", 40) )
+	theBoard.makeBoard( p, getURLParameter("tilesize", "m") );
+	theBoard.newGame();*/
+}
+
+function Params(r,c,b) {
+	this.rows = r;
+	this.cols = c;
+	this.bombs = b;
 }
 
 //modified slightly (to include default value) from http://stackoverflow.com/questions/11582512/how-to-get-url-parameters-with-javascript/
@@ -39,18 +47,20 @@ function getURLParameter(name, defaultVal) {
 }
 
 function Board() {
+	this.num = null;	// needed in newGameButton()
+	
 	this.tableElt = document.getElementById("grid");
 	
 	this.faceElt = document.getElementById("face");
 	this.faceElt.onclick = function(e) {
 		theBoard.newGame();
-	};
-	
+	}
+
 	this.newGame = function() {
 		this.playing = true;
 		this.allTiles( function(t) { t.reset() } );
-		theBoard.setBombs( this.numBombs );
-		theCounter.setTo( this.numBombs );
+		theBoard.setBombs( this.num.bombs );
+		theCounter.setTo( this.num.bombs );
 		theTimer.reset();
 		this.setFace("neutral");
 	}
@@ -62,11 +72,9 @@ function Board() {
 		else this.setFace("sad");
 	}
 	
-	this.makeBoard = function(r, c, bombs, tileSize) {
-		this.numrows = r
-		this.numcols = c
-		this.numBombs = bombs;
-		this.tileSize = tileSize;
+	this.makeBoard = function(p, t) {
+		this.num = p;
+		this.tileSize = t;
 		this.tableElt.setAttribute("class", "tiles-"+this.tileSize)
 		this.board = []	//array for tiles
 	
@@ -78,11 +86,11 @@ function Board() {
 		}
 		
 		//build new the board
-		for ( i=0 ; i < this.numrows ; i++ ) {
+		for ( i=0 ; i < this.num.rows ; i++ ) {
 			var newRow = []
 			var newRowElt = document.createElement('tr');
 		
-			for ( j=0 ; j < this.numcols ; j++ ) {
+			for ( j=0 ; j < this.num.cols ; j++ ) {
 				var newTile = new Tile(i,j);
 				newRow.push(newTile);
 				newRowElt.appendChild(newTile.tdElt)
@@ -94,14 +102,14 @@ function Board() {
 	};
 	
 	this.setBombs = function(k) {
-		var n = this.numrows * this.numcols;
+		var n = this.num.rows * this.num.cols;
 		this.nonBombs = n - k;
 		while ( n > 0 ) {
 			n--;
 			var cutoff = Math.floor( Math.random() * n ); //random # >=0 and <n
 			if ( cutoff < k ) {
-				var j = n % this.numcols;
-				var i = Math.floor(n / this.numcols);
+				var j = n % this.num.cols;
+				var i = Math.floor(n / this.num.cols);
 				this.board[i][j].setBomb(true);
 				k--;
 			}
@@ -109,14 +117,14 @@ function Board() {
 	};
 	
 	this.getTile = function(i,j) {
-		if ( i < 0 || i >= this.numrows ) return null;
-		if ( j < 0 || j >= this.numcols ) return null;
+		if ( i < 0 || i >= this.num.rows ) return null;
+		if ( j < 0 || j >= this.num.cols ) return null;
 		return this.board[i][j];
 	};
 	
 	this.allTiles = function(iter) {
-		for ( i=0 ; i < this.numrows ; i++ ) {
-			for ( j=0 ; j < this.numcols ; j++ ) {
+		for ( i=0 ; i < this.num.rows ; i++ ) {
+			for ( j=0 ; j < this.num.cols ; j++ ) {
 				iter(this.board[i][j]);
 			}
 		}

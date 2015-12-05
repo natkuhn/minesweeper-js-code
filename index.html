@@ -15,7 +15,7 @@ body {
 	padding:	50px;
 }
 
-#controls {
+#leftcolumn {
 	border-right:	1px solid black;
 /*	width:			500px;*/
 }
@@ -33,33 +33,34 @@ body {
 */		</style>
 	</head>
 	<body>
-		<table class="columns"><tr><td id="controls">
-			<form>
+		<table class="columns"><tr><td id="leftcolumn">
+			<form id="controls">
 				<fieldset id="boardsize">
 					<legend>Board size</legend>
-					<label><input type="radio" name="difficulty" value="beginner" />Beginner</label><br />
-					<label><input type="radio" name="difficulty" value="intermediate" />Intermediate</label><br />
-					<label><input type="radio" name="difficulty" value="advanced" />Advanced</label><br />
-					<label><input type="radio" name="difficulty" value="custom" />Custom</label><br />
+					<label><input type="radio" name="level" value="b" />Beginner</label><br />
+					<label><input type="radio" name="level" value="i" checked="checked" />Intermediate</label><br />
+					<label><input type="radio" name="level" value="a" />Advanced</label><br />
+					<label><input type="radio" name="level" value="c" />Custom</label><br />
 					<div id="customcontrols">
 						<label>Rows:<input type="text" name="rows" maxlength=3 /></label><br />
-						<label>Columns:<input type="text" name="rows" maxlength=3 /></label><br />
-						<label>Bombs:<input type="text" name="rows" maxlength=3 /></label><br />
+						<label>Columns:<input type="text" name="columns" maxlength=3 /></label><br />
+						<label>Bombs:<input type="text" name="bombs" maxlength=3 /></label><br />
 					</div>
 				</fieldset>
 				<fieldset id="tilesize">
 					<legend>Tile size</legend>
 					<label><input type="radio" name="tsize" value="s" />Small (16 pixels)</label><br />
-					<label><input type="radio" name="tsize" value="m" />Medium (24 pixels)</label><br />
+					<label><input type="radio" name="tsize" value="m" checked="checked" />Medium (24 pixels)</label><br />
 					<label><input type="radio" name="tsize" value="l" />Large (32 pixels)</label><br />
 				</fieldset>
+				<input type="submit" name="newgame" value="New Game" />
 			</form>
 		</td><td id="board">
 			<table id="box">
 				<tr>
-					<td><div class="readout" id="counter">-02</div></td>
+					<td><div class="readout" id="counter">123</div></td>
 					<td id="face" class="neutral"></td>
-					<td><div class="readout" id="timer">123</div></td>
+					<td><div class="readout" id="timer">456</div></td>
 				</tr>
 				<tr><td colspan="3">
 					<table id="grid"></table>
@@ -67,5 +68,6 @@ body {
 			</table>
 		</td></tr></table>
 		<script src="minesweeper.js"></script>
+		<script src="controls.js"></script>
 	</body>
 </html>
