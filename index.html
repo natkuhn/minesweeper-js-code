@@ -26,6 +26,14 @@ body {
  width="100%" height="100%"*/
 }
 
+#customsize td {
+	padding:	3px;
+}
+
+#leftcolumn br {
+	line-height:	1.6em;
+}
+
 /*
 #board {
 	width:	100%;
@@ -41,11 +49,11 @@ body {
 					<label><input type="radio" name="level" value="i" checked="checked" />Intermediate</label><br />
 					<label><input type="radio" name="level" value="a" />Advanced</label><br />
 					<label><input type="radio" name="level" value="c" />Custom</label><br />
-					<div id="customcontrols">
-						<label>Rows:<input type="text" name="rows" maxlength=3 /></label><br />
-						<label>Columns:<input type="text" name="columns" maxlength=3 /></label><br />
-						<label>Bombs:<input type="text" name="bombs" maxlength=3 /></label><br />
-					</div>
+					<table id="customsize">
+						<tr><td>Rows:</td><td><input type="text" name="rows" maxlength=3 /></td></tr>
+						<tr><td>Columns:</td><td><input type="text" name="columns" maxlength=3 /></td></tr>
+						<tr><td>Bombs:</td><td><input type="text" name="bombs" maxlength=3 /></td></tr>
+					</table>
 				</fieldset>
 				<fieldset id="tilesize">
 					<legend>Tile size</legend>
