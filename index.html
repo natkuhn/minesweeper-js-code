@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+	<head>
+		<title>minesweeper-js</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="minesweeper.css">
+		<link rel="stylesheet" type="text/css" href="controls.css">
+	</head>
+	<body>
+		<table class="columns"><tr><td id="leftcolumn">
+			<form id="controls">
+				<fieldset id="boardsize">
+					<legend>Board size</legend>
+					<label><input type="radio" name="level" value="b" />Beginner</label><br />
+					<label><input type="radio" name="level" value="i" checked="checked" />Intermediate</label><br />
+					<label><input type="radio" name="level" value="a" />Advanced</label><br />
+					<label><input type="radio" name="level" value="c" />Custom</label><br />
+					<table id="customsize">
+						<tr><td>Rows:</td><td><input type="text" name="rows" maxlength=3 /></td></tr>
+						<tr><td>Columns:</td><td><input type="text" name="columns" maxlength=3 /></td></tr>
+						<tr><td>Bombs:</td><td><input type="text" name="bombs" maxlength=3 /></td></tr>
+					</table>
+				</fieldset>
+				<fieldset id="tilesize">
+					<legend>Tile size</legend>
+					<label><input type="radio" name="tsize" value="s" />Small (16 pixels)</label><br />
+					<label><input type="radio" name="tsize" value="m" checked="checked" />Medium (24 pixels)</label><br />
+					<label><input type="radio" name="tsize" value="l" />Large (32 pixels)</label><br />
+				</fieldset>
+				<input type="submit" name="newgame" value="New Game" />
+			</form>
+		</td><td id="board">
+			<table id="box">
+				<tr>
+					<td><div class="readout" id="counter">123</div></td>
+					<td id="face" class="neutral"></td>
+					<td><div class="readout" id="timer">456</div></td>
+				</tr>
+				<tr><td colspan="3">
+					<table id="grid"></table>
+				</td></tr>
+			</table>
+		</td></tr></table>
+		<script src="minesweeper.js"></script>
+		<script src="controls.js"></script>
+	</body>
+</html>
