@@ -3,12 +3,11 @@
 	
 	v0.1 11/27/15: handles left click, right click, and standard game play
 	
-	* TODO: needs settings, especially board size including custom
-	* TODO: board sizes: beginner 9x9 with 10 bombs; intermediate 16x16 with 40 bombs; expert 16x30 with 99 bombs
+	* TODO: need to validate parameters
+	* TODO: make URL parameters work for initial settings
+	* TODO: show/hide settings, as menu
+	* TODO: force screen to scroll not shrink the tiles
 	* TODO: make text, icons etc in tiles non-selectable if possible
-	* TODO: eliminate unneeded CSS
-	* TODO: needs page with settings that calls as iframe
-	* TODO: newboard should validate parameters?
 */
 
 var theTimer;

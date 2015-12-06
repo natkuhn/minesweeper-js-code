@@ -5,7 +5,9 @@
 
 #box td {
 	padding:		0px;
-	border:			2px solid gray;
+	border:			2px solid Gray;
+/*	box-shadow:		1px 1px 0px Gray inset;
+	box-shadow:		-1px -1px 0px Gray inset;*/
 }
 
 #grid {
@@ -13,6 +15,17 @@
 	border-spacing:	0px;
 	font-family:	monospace;
 	font-weight:	bold;
+	box-shadow:		initial;
+
+/* this prevents text and image in the grid from being selectable,
+	following http://stackoverflow.com/questions/826782/css-rule-to-disable-text-selection-highlighting
+*/
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 #grid td {

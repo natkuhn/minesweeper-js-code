@@ -28,3 +28,11 @@ body {
 	line-height:	1.8em;
 }
 
+#newgame {
+	-webkit-appearance:	button;
+	font-family:	Verdana;
+	font-size:		1em;
+	border-radius:	5px;
+	margin:	10px 20px;
+	background-color:	White;
+}
