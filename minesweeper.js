@@ -148,7 +148,6 @@ function Tile(i,j) {
 	this.myRow = i;
 	this.myCol = j;
 	this.tdElt = document.createElement('td');
-//	this.tdElt.user_tile = this;	//link back for event handler
 
 	var self = this;
 	this.tdElt.onclick = function(e) {
@@ -158,9 +157,6 @@ function Tile(i,j) {
 		self.rightClick();
 	};
 
-/*	var self = this;
-	this.tdElt.onclick = function(e) { self.leftClick(e) };
-	this.tdElt.oncontextmenu = function(e) { self.rightClick(e) };*/
 	this.reset();
 }
 
@@ -169,7 +165,7 @@ Tile.prototype = {
 		this.bomb = false
 		this.status = COVERED
 		this.bombNeighbors = -1;	//unrevealed
-		this.setContent("covered-" + theBoard.tileSize, "");
+		this.setImage( addSize("covered-"), retString("") );
 	},
 	
 	setBomb: function(v) {
@@ -181,19 +177,19 @@ Tile.prototype = {
 		if ( !theBoard.playing || this.status == UNCOVERED ) return false;
 		if ( this.status == COVERED ) {
 			theCounter.decrement();
-			this.setContent("covered-" + theBoard.tileSize, this.iconHTML("flag"));
 			this.status = FLAG;
+			this.setImage( addSize("covered-"), iconHTML("flag") );
 			return false;
 		}
 		if ( this.status == FLAG ) {	//there could be a setting to go straight back to covered w/o going through ?
 			theCounter.increment();
-			this.setContent("covered-" + theBoard.tileSize, "?");
 			this.status = QUESTION;
+			this.setImage( addSize("covered-"), retString("?") );
 			return false;
 		}
 		if ( this.status == QUESTION ) {
-			this.setContent("covered-" + theBoard.tileSize, "");
 			this.status = COVERED;
+			this.setImage( addSize("covered-"), retString("") );
 			return false;
 		}
 		assert(false, "Tile has invalid status: "+this.status);
@@ -205,18 +201,20 @@ Tile.prototype = {
 		//ignore clicks if game over, or on flags or already uncovered
 		if ( !theBoard.playing || this.status == FLAG || this.status == UNCOVERED ) return;
 		if ( this.bomb ) {	//oops, you lose
-			this.setContent("redsquare-" + theBoard.tileSize, this.iconHTML("bomb"));
 			this.status = UNCOVERED;
-			theTimer.stop()
 			theCounter.decrement();
+			this.setImage( addSize("redsquare-"), iconHTML("bomb") );
 			//game over, loss
 			theBoard.playing = false;
+			theTimer.stop()
 			theBoard.allTiles( function(t) {
 				if ( t.status == UNCOVERED ) return;
-				if ( t.bomb ) t.setContent("uncovered-" + theBoard.tileSize, t.iconHTML("bomb"));
+				if ( t.bomb ) {
+					t.setImage( addSize("uncovered-"), iconHTML("bomb") );
+				}
 				else /*covered non-bomb*/ if (t.status == FLAG) {
 					theCounter.increment();		//counter should show only correct guesses
-					t.setContent("uncovered-" + theBoard.tileSize, t.iconHTML("bombx"));
+					t.setImage( addSize("uncovered-"), iconHTML("bombx") );
 				} 
 			} );
 			theBoard.endGame(false);	//you lose
@@ -244,8 +242,12 @@ Tile.prototype = {
 		this.status = UNCOVERED;
 		
 		
-		if (bombNeighbors > 0) this.setContent("uncovered-" + theBoard.tileSize + " n"+bombNeighbors, ""+bombNeighbors);
-		else this.setContent("uncovered-" + theBoard.tileSize, "");
+		if (bombNeighbors > 0) {
+			this.setImage( addSize( "n" + bombNeighbors + " uncovered-" ), retString(""+bombNeighbors) );
+		}
+		else {
+			this.setImage( addSize("uncovered-"), retString("") );
+		}
 		
 		theBoard.nonBombs--;
 		
@@ -256,7 +258,7 @@ Tile.prototype = {
 			theBoard.allTiles( function(t) {
 				if ( t.status == UNCOVERED ) return;	//don't care about uncovered
 				assert(t.bomb, "Player won, but there is a covered non-bomb");
-				t.setContent("covered-" + theBoard.tileSize, t.iconHTML("flag"));
+				t.setImage( addSize("covered-"), iconHTML("flag") );
 			} );
 			theBoard.endGame(true);
 			return;
@@ -278,14 +280,30 @@ Tile.prototype = {
 		}
 	},
 	
-	setContent: function(className, html) {
-		this.tdElt.setAttribute("class", className);
-		this.tdElt.innerHTML = html;
-	},
-	
-	iconHTML: function(name) {
-		return '<div class="' + name + '-' + theBoard.tileSize + '"><img src="graphics/' + name + '-' + 
-			theBoard.tileSize + '.png" /></div>';
+	setImage: function(c,h) {
+		this.myClass = c;
+		this.myHTML = h;
+		refreshImage(this);
+	}
+}
+
+function refreshImage(t) {
+	t.tdElt.setAttribute( "class", t.myClass(theBoard.tileSize) );
+	t.tdElt.innerHTML = t.myHTML(theBoard.tileSize) ;
+}
+
+function addSize(str) {
+	return function(size) { return str + size ; }
+}
+
+function retString(str) {
+	return function(size) { return str ; }
+}
+
+function iconHTML(name) {
+	return function(size) {
+		return '<div class="' + name + '-' + size + '"><img src="graphics/' + name + '-' + 
+			size + '.png" /></div>';
 	}
 }
 

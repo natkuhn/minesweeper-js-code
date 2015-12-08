@@ -8,10 +8,17 @@ var controlsForm;
 
 function initControls() {
 	controlsForm = document.getElementById("controls");
+	
 	controlsForm.onsubmit = function(e) {
 		e.preventDefault();			//don't want to submit an actual form
 		newGameButton();
 	}
+	
+	sizeButtons = document.getElementsByName("tsize");
+	for ( var i=0 ; i < sizeButtons.length ; i++ ) {
+		sizeButtons[i].onclick = resizeBoard
+	}
+	
 	newGameButton();
 }
 
@@ -30,11 +37,17 @@ function newGameButton(e) {
 		paramObj.c = new Params( els.rows.value, els.columns.value, els.bombs.value );
 	}
 	var newp = paramObj[els.level.value];
-	var newts = els.tsize.value;
 	
-	if ( theBoard.num == null || 
-		 !equalParams(newp, theBoard.num) || 
-		 newts != theBoard.tileSize ) theBoard.makeBoard(newp, newts);
+	if ( theBoard.num == null || !equalParams(newp, theBoard.num) ) {
+		theBoard.makeBoard(newp, els.tsize.value);
+	}
 	
 	theBoard.newGame();
+}
+
+function resizeBoard(e) {
+	theBoard.tileSize = controlsForm.elements.tsize.value;
+	theBoard.tableElt.setAttribute("class", "tiles-" + controlsForm.elements.tsize.value );
+
+	theBoard.allTiles( refreshImage );
 }
