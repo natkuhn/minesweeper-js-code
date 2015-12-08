@@ -8,6 +8,7 @@ var controlsForm;
 
 function initControls() {
 	controlsForm = document.getElementById("controls");
+	
 	controlsForm.onsubmit = function(e) {
 		e.preventDefault();			//don't want to submit an actual form
 		newGameButton();
@@ -17,6 +18,7 @@ function initControls() {
 	for ( var i=0 ; i < sizeButtons.length ; i++ ) {
 		sizeButtons[i].onclick = resizeBoard
 	}
+	
 	newGameButton();
 }
 
@@ -47,10 +49,5 @@ function resizeBoard(e) {
 	theBoard.tileSize = controlsForm.elements.tsize.value;
 	theBoard.tableElt.setAttribute("class", "tiles-" + controlsForm.elements.tsize.value );
 
-	theBoard.allTiles( refreshTile );
-}
-
-function refreshTile(t) {
-	t.tdElt.setAttribute( "class", t.myClass(theBoard.tileSize) );
-	t.tdElt.innerHTML = t.myHTML(theBoard.tileSize) ;
+	theBoard.allTiles( refreshImage );
 }
