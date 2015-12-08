@@ -4,10 +4,13 @@
 	v0.1 11/27/15: handles left click, right click, and standard game play
 	
 	* TODO: need to validate parameters
-	* TODO: make URL parameters work for initial settings
-	* TODO: show/hide settings, as menu
+	* TODO: turn settings into menu which is shown or hidden
+	* TODO: larger tiles for tablet
+	* TODO: how to make work on tablet?
+	* TODO: set counters to 0 when game over (at least on a win)
+	* TODO: change tile size mid-game
 	* TODO: force screen to scroll not shrink the tiles
-	* TODO: make text, icons etc in tiles non-selectable if possible
+	* TODO: make other things besides grid non-selectable?
 */
 
 var theTimer;
