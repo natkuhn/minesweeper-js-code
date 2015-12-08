@@ -170,6 +170,9 @@ Tile.prototype = {
 		this.status = COVERED
 		this.bombNeighbors = -1;	//unrevealed
 //		this.setContent("covered--" + theBoard.tileSize, "");
+		this.myClass = addSize("covered-");
+		this.myHTML = retString("");
+		refreshTile(this);
 	},
 	
 	setBomb: function(v) {
@@ -183,7 +186,8 @@ Tile.prototype = {
 			theCounter.decrement();
 //			this.setContent("covered--" + theBoard.tileSize, this.iconHTML("flag"));
 			this.myClass = addSize("covered-");
-			this.myHTML = retString("");
+			this.myHTML = iconHTML("flag");
+			refreshTile(this);
 			this.status = FLAG;
 			return false;
 		}
@@ -191,7 +195,8 @@ Tile.prototype = {
 			theCounter.increment();
 //			this.setContent("covered--" + theBoard.tileSize, "?");
 			this.myClass = addSize("covered-");
-			this.myHTML = retString("");
+			this.myHTML = retString("?");
+			refreshTile(this);
 			this.status = QUESTION;
 			return false;
 		}
@@ -199,6 +204,7 @@ Tile.prototype = {
 //			this.setContent("covered--" + theBoard.tileSize, "");
 			this.myClass = addSize("covered-");
 			this.myHTML = retString("");
+			refreshTile(this);
 			this.status = COVERED;
 			return false;
 		}
@@ -212,8 +218,9 @@ Tile.prototype = {
 		if ( !theBoard.playing || this.status == FLAG || this.status == UNCOVERED ) return;
 		if ( this.bomb ) {	//oops, you lose
 //			this.setContent("redsquare--" + theBoard.tileSize, this.iconHTML("bomb"));
-			this.myClass = addSize("covered-");
-			this.myHTML = retString("");
+			this.myClass = addSize("redsquare-");
+			this.myHTML = iconHTML("bomb");
+			refreshTile(this);
 			this.status = UNCOVERED;
 			theTimer.stop()
 			theCounter.decrement();
@@ -223,14 +230,16 @@ Tile.prototype = {
 				if ( t.status == UNCOVERED ) return;
 				if ( t.bomb ) {
 //					t.setContent("uncovered--" + theBoard.tileSize, t.iconHTML("bomb"));
-					this.myClass = addSize("covered-");
-					this.myHTML = retString("");
+					t.myClass = addSize("uncovered-");
+					t.myHTML = iconHTML("bomb");
+					refreshTile(t);
 				}
 				else /*covered non-bomb*/ if (t.status == FLAG) {
 					theCounter.increment();		//counter should show only correct guesses
 //					t.setContent("uncovered--" + theBoard.tileSize, t.iconHTML("bombx"));
-					this.myClass = addSize("covered-");
-					this.myHTML = retString("");
+					t.myClass = addSize("uncovered-");
+					t.myHTML = iconHTML("bombx");
+					refreshTile(t);
 				} 
 			} );
 			theBoard.endGame(false);	//you lose
@@ -260,13 +269,15 @@ Tile.prototype = {
 		
 		if (bombNeighbors > 0) {
 //			this.setContent("uncovered--" + theBoard.tileSize + " n"+bombNeighbors, ""+bombNeighbors);
-			this.myClass = addSize("covered-");
-			this.myHTML = retString("");
+			this.myClass = addSize( "n" + bombNeighbors + " uncovered-" );
+			this.myHTML = retString( ""+bombNeighbors );
+			refreshTile(this);
 		}
 		else {
 //			this.setContent("uncovered--" + theBoard.tileSize, "");
-			this.myClass = addSize("covered-");
+			this.myClass = addSize("uncovered-");
 			this.myHTML = retString("");
+			refreshTile(this);
 		}
 		
 		theBoard.nonBombs--;
@@ -280,7 +291,8 @@ Tile.prototype = {
 				assert(t.bomb, "Player won, but there is a covered non-bomb");
 //				t.setContent("covered--" + theBoard.tileSize, t.iconHTML("flag"));
 				this.myClass = addSize("covered-");
-				this.myHTML = retString("");
+				this.myHTML = iconHTML("flag");
+				refreshTile(this);
 			} );
 			theBoard.endGame(true);
 			return;
@@ -317,7 +329,7 @@ function addSize(str) {
 	return function(size) { return str + size ; }
 }
 
-function retStr(str) {
+function retString(str) {
 	return function(size) { return str ; }
 }
 

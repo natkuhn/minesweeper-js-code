@@ -52,5 +52,5 @@ function resizeBoard(e) {
 
 function refreshTile(t) {
 	t.tdElt.setAttribute( "class", t.myClass(theBoard.tileSize) );
-	t.tdElt.InnerHTML = t.myHTML(theBoard.tileSize) ;
+	t.tdElt.innerHTML = t.myHTML(theBoard.tileSize) ;
 }
