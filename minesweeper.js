@@ -169,7 +169,7 @@ Tile.prototype = {
 		this.bomb = false
 		this.status = COVERED
 		this.bombNeighbors = -1;	//unrevealed
-		this.setContent("covered-" + theBoard.tileSize, "");
+//		this.setContent("covered--" + theBoard.tileSize, "");
 	},
 	
 	setBomb: function(v) {
@@ -181,18 +181,24 @@ Tile.prototype = {
 		if ( !theBoard.playing || this.status == UNCOVERED ) return false;
 		if ( this.status == COVERED ) {
 			theCounter.decrement();
-			this.setContent("covered-" + theBoard.tileSize, this.iconHTML("flag"));
+//			this.setContent("covered--" + theBoard.tileSize, this.iconHTML("flag"));
+			this.myClass = addSize("covered-");
+			this.myHTML = retString("");
 			this.status = FLAG;
 			return false;
 		}
 		if ( this.status == FLAG ) {	//there could be a setting to go straight back to covered w/o going through ?
 			theCounter.increment();
-			this.setContent("covered-" + theBoard.tileSize, "?");
+//			this.setContent("covered--" + theBoard.tileSize, "?");
+			this.myClass = addSize("covered-");
+			this.myHTML = retString("");
 			this.status = QUESTION;
 			return false;
 		}
 		if ( this.status == QUESTION ) {
-			this.setContent("covered-" + theBoard.tileSize, "");
+//			this.setContent("covered--" + theBoard.tileSize, "");
+			this.myClass = addSize("covered-");
+			this.myHTML = retString("");
 			this.status = COVERED;
 			return false;
 		}
@@ -205,7 +211,9 @@ Tile.prototype = {
 		//ignore clicks if game over, or on flags or already uncovered
 		if ( !theBoard.playing || this.status == FLAG || this.status == UNCOVERED ) return;
 		if ( this.bomb ) {	//oops, you lose
-			this.setContent("redsquare-" + theBoard.tileSize, this.iconHTML("bomb"));
+//			this.setContent("redsquare--" + theBoard.tileSize, this.iconHTML("bomb"));
+			this.myClass = addSize("covered-");
+			this.myHTML = retString("");
 			this.status = UNCOVERED;
 			theTimer.stop()
 			theCounter.decrement();
@@ -213,10 +221,16 @@ Tile.prototype = {
 			theBoard.playing = false;
 			theBoard.allTiles( function(t) {
 				if ( t.status == UNCOVERED ) return;
-				if ( t.bomb ) t.setContent("uncovered-" + theBoard.tileSize, t.iconHTML("bomb"));
+				if ( t.bomb ) {
+//					t.setContent("uncovered--" + theBoard.tileSize, t.iconHTML("bomb"));
+					this.myClass = addSize("covered-");
+					this.myHTML = retString("");
+				}
 				else /*covered non-bomb*/ if (t.status == FLAG) {
 					theCounter.increment();		//counter should show only correct guesses
-					t.setContent("uncovered-" + theBoard.tileSize, t.iconHTML("bombx"));
+//					t.setContent("uncovered--" + theBoard.tileSize, t.iconHTML("bombx"));
+					this.myClass = addSize("covered-");
+					this.myHTML = retString("");
 				} 
 			} );
 			theBoard.endGame(false);	//you lose
@@ -244,8 +258,16 @@ Tile.prototype = {
 		this.status = UNCOVERED;
 		
 		
-		if (bombNeighbors > 0) this.setContent("uncovered-" + theBoard.tileSize + " n"+bombNeighbors, ""+bombNeighbors);
-		else this.setContent("uncovered-" + theBoard.tileSize, "");
+		if (bombNeighbors > 0) {
+//			this.setContent("uncovered--" + theBoard.tileSize + " n"+bombNeighbors, ""+bombNeighbors);
+			this.myClass = addSize("covered-");
+			this.myHTML = retString("");
+		}
+		else {
+//			this.setContent("uncovered--" + theBoard.tileSize, "");
+			this.myClass = addSize("covered-");
+			this.myHTML = retString("");
+		}
 		
 		theBoard.nonBombs--;
 		
@@ -256,7 +278,9 @@ Tile.prototype = {
 			theBoard.allTiles( function(t) {
 				if ( t.status == UNCOVERED ) return;	//don't care about uncovered
 				assert(t.bomb, "Player won, but there is a covered non-bomb");
-				t.setContent("covered-" + theBoard.tileSize, t.iconHTML("flag"));
+//				t.setContent("covered--" + theBoard.tileSize, t.iconHTML("flag"));
+				this.myClass = addSize("covered-");
+				this.myHTML = retString("");
 			} );
 			theBoard.endGame(true);
 			return;
@@ -278,14 +302,30 @@ Tile.prototype = {
 		}
 	},
 	
-	setContent: function(className, html) {
+/*	setContent: function(className, html) {
 		this.tdElt.setAttribute("class", className);
 		this.tdElt.innerHTML = html;
 	},
-	
+*/	
 	iconHTML: function(name) {
-		return '<div class="' + name + '-' + theBoard.tileSize + '"><img src="graphics/' + name + '-' + 
+		return '<div class="' + name + '--' + theBoard.tileSize + '"><img src="graphics/' + name + '-' + 
 			theBoard.tileSize + '.png" /></div>';
+	}
+}
+
+function addSize(str) {
+	return function(size) { return str + size ; }
+}
+
+function retStr(str) {
+	return function(size) { return str ; }
+}
+
+function iconHTML(name) {
+	return function(size) {
+		return '<div class="' + name + '-' + size + '"><img src="graphics/' + name + '-' + 
+			size + '.png" /></div>';
+	
 	}
 }
 
