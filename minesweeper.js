@@ -7,10 +7,22 @@
 	* TODO: turn settings into menu which is shown or hidden
 	* TODO: larger tiles for tablet
 	* TODO: how to make work on tablet?
-	* TODO: set counters to 0 when game over (at least on a win)
-	* TODO: change tile size mid-game
 	* TODO: force screen to scroll not shrink the tiles
-	* TODO: make other things besides grid non-selectable?
+	* TODO: make other things besides grid non-selectable (e.g. settings)?
+	* TODO: change board size dynamically if game not started
+*/
+
+/* Here are all the different appearances of tiles:
+
+covered, non-bomb (set in Tile.reset() )
+covered-flag, covered-question-mark--in rightClick
+
+exploded bomb (redsquare background)
+uncovered bomb (gray background)-after losing
+uncovered non-bomb-after losing
+uncovered with blank or number, while playing
+covered-flag after winning
+
 */
 
 var theTimer;
@@ -105,19 +117,19 @@ function Board() {
 	
 	this.setBombs = function(k) {
 		var n = this.num.rows * this.num.cols;
+		assert(k<=n, "Too many bombs!");
 		this.nonBombs = n - k;
 		while ( n > 0 ) {
 			n--;
-			var cutoff = Math.floor( Math.random() * n ); //random # >=0 and <n
-			if ( cutoff < k ) {
+			if ( Math.random() < k/n ) {	//prob of bomb should be k/n, never true if k=0, always true if k=n
 				var j = n % this.num.cols;
 				var i = Math.floor(n / this.num.cols);
-				this.board[i][j].setBomb(true);
+				this.board[i][j].bomb = true;
 				k--;
 			}
 		}
 	};
-	
+
 	this.getTile = function(i,j) {
 		if ( i < 0 || i >= this.num.rows ) return null;
 		if ( j < 0 || j >= this.num.cols ) return null;
@@ -163,13 +175,8 @@ function Tile(i,j) {
 Tile.prototype = {
 	reset: function() {
 		this.bomb = false
-		this.status = COVERED
-		this.bombNeighbors = -1;	//unrevealed
+		this.status = COVERED//		this.bombNeighbors = -1;	//unrevealed--not used in javascript version
 		this.setImage( addSize("covered-"), retString("") );
-	},
-	
-	setBomb: function(v) {
-		this.bomb = v;
 	},
 	
 	rightClick: function(evtObj) {
@@ -241,7 +248,6 @@ Tile.prototype = {
 		
 		this.status = UNCOVERED;
 		
-		
 		if (bombNeighbors > 0) {
 			this.setImage( addSize( "n" + bombNeighbors + " uncovered-" ), retString(""+bombNeighbors) );
 		}
@@ -257,6 +263,7 @@ Tile.prototype = {
 			theTimer.stop();
 			theBoard.allTiles( function(t) {
 				if ( t.status == UNCOVERED ) return;	//don't care about uncovered
+				if ( t.status != FLAG ) theCounter.decrement();	//could just set counter to zero but this is fail-safe
 				assert(t.bomb, "Player won, but there is a covered non-bomb");
 				t.setImage( addSize("covered-"), iconHTML("flag") );
 			} );
