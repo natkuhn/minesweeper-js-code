@@ -16,9 +16,15 @@ function Controls() {
 	radioControl( "tsize", this.resizeTiles );	
 	radioControl( "level", this.changeLevel );
 	
+	this.customform = document.getElementById("customform");
 	this.rowform = document.getElementById("rows");
 	this.colform = document.getElementById("columns");
 	this.bombform = document.getElementById("bombs");
+	
+	//attach validators to "onblur" methods here
+// 	this.rowform.onblur = function(e) {
+// 		rowvalid = 
+// 	}
 	
 	this.newGameButton();
 }
@@ -50,9 +56,13 @@ Controls.prototype = {
 	changeLevel: function(e) {
 		var level = theControls.ctrlElements.level.value;
 		if ( level == 'c' ) {
+// 			theControls.customform.setAttribute("class", "showcustom" );
 			//validation here? or not...
 		}
-		else if ( theBoard.game != PLAYING ) theControls.newGameButton(e);
+		else {
+// 			theControls.customform.setAttribute("class", "hidecustom" );
+			if ( theBoard.game != PLAYING ) theControls.newGameButton(e);
+		}
 	}
 }
 

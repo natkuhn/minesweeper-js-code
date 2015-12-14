@@ -220,14 +220,22 @@
 bottom in "border-collapse: collapse" mode...  
 */
 
-#customsize {
+#customform {
 	line-height:	1em;
 }
 
 .noerror {
-	visibility:		hidden;
+	visibility:		visible;
 }
 
 .error {
 	color:		Red;
+}
+
+.hidecustom {
+	visibility:		hidden;
+}
+
+.showcustom {
+	visibility:		visible;
 }
