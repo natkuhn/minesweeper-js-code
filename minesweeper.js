@@ -71,7 +71,7 @@ function Board() {
 	}
 
 	this.newGame = function() {
-		this.playing = true;
+		this.game = WAITING;
 		this.allTiles( function(t) { t.reset() } );
 		theBoard.setBombs( this.num.bombs );
 		theCounter.setTo( this.num.bombs );
@@ -80,10 +80,9 @@ function Board() {
 	}
 	
 	this.endGame = function(win) {
-		this.playing = false;	//don't accept more clicks
+		this.game = OVER;	//don't accept more clicks
 		theTimer.stop();
-		if (win) this.setFace("happy");
-		else this.setFace("sad");
+		this.setFace( win ? "happy" : "sad" );
 	}
 	
 	this.makeBoard = function(p, t) {
@@ -156,6 +155,10 @@ var FLAG = 1;
 var QUESTION = 2;
 var EXCLAMATION = 3;	//not a status per se but used for displaying hints
 
+var WAITING = 0;
+var PLAYING = 1;
+var OVER = 2;
+
 function Tile(i,j) {
 	this.myRow = i;
 	this.myCol = j;
@@ -181,7 +184,7 @@ Tile.prototype = {
 	
 	rightClick: function(evtObj) {
 		//do nothing if game over or already uncovered
-		if ( !theBoard.playing || this.status == UNCOVERED ) return false;
+		if ( theBoard.game == OVER || this.status == UNCOVERED ) return false;
 		if ( this.status == COVERED ) {
 			theCounter.decrement();
 			this.status = FLAG;
@@ -204,16 +207,21 @@ Tile.prototype = {
 	
 	leftClick: function(evtObj) {
 		console.log('mouseclick in tile '+this.myRow+','+this.myCol);
-		theTimer.going();	//make sure the timer is going
+		if ( theBoard.game == WAITING ) {
+			theTimer.start();
+			theBoard.game = PLAYING;
+		}
+//		theTimer.going();	//make sure the timer is going
 		//ignore clicks if game over, or on flags or already uncovered
-		if ( !theBoard.playing || this.status == FLAG || this.status == UNCOVERED ) return;
+		if ( theBoard.game == OVER || this.status == FLAG || this.status == UNCOVERED ) return;
 		if ( this.bomb ) {	//oops, you lose
 			this.status = UNCOVERED;
 			theCounter.decrement();
 			this.setImage( addSize("redsquare-"), iconHTML("bomb") );
 			//game over, loss
-			theBoard.playing = false;
-			theTimer.stop()
+//	not necessary, covered by endgame()
+//			theBoard.playing = false;
+//			theTimer.stop()
 			theBoard.allTiles( function(t) {
 				if ( t.status == UNCOVERED ) return;
 				if ( t.bomb ) {
@@ -259,8 +267,9 @@ Tile.prototype = {
 		
 		if (theBoard.nonBombs == 0 ) {
 			//game over, win
-			theBoard.playing = false;
-			theTimer.stop();
+//	not necessary, covered by endgame()
+//			theBoard.playing = false;
+//			theTimer.stop();
 			theBoard.allTiles( function(t) {
 				if ( t.status == UNCOVERED ) return;	//don't care about uncovered
 				if ( t.status != FLAG ) theCounter.decrement();	//could just set counter to zero but this is fail-safe
