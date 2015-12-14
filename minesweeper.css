@@ -219,3 +219,15 @@
 /* a weird bug, at least in Chrome, causes this to display one row of pixels on the right and
 bottom in "border-collapse: collapse" mode...  
 */
+
+#customsize {
+	line-height:	1em;
+}
+
+.noerror {
+	visibility:		hidden;
+}
+
+.error {
+	color:		Red;
+}

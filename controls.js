@@ -4,22 +4,64 @@ var paramObj = {
 	a:	new Params( 16, 30, 99 )
 }
 
-var controlsForm;
-
-function initControls() {
-	controlsForm = document.getElementById("controls");
+function Controls() {
+	this.controlsForm = document.getElementById("controls");
+	this.ctrlElements = this.controlsForm.elements;
 	
-	controlsForm.onsubmit = function(e) {
+	this.controlsForm.onsubmit = function(e) {
 		e.preventDefault();			//don't want to submit an actual form
-		newGameButton();
+		theControls.newGameButton();
 	}
 	
-	sizeButtons = document.getElementsByName("tsize");
-	for ( var i=0 ; i < sizeButtons.length ; i++ ) {
-		sizeButtons[i].onclick = resizeBoard
-	}
+	radioControl( "tsize", this.resizeTiles );	
+	radioControl( "level", this.changeLevel );
 	
-	newGameButton();
+	this.rowform = document.getElementById("rows");
+	this.colform = document.getElementById("columns");
+	this.bombform = document.getElementById("bombs");
+	
+	this.newGameButton();
+}
+
+Controls.prototype = {
+	newGameButton: function(e) {
+	
+		var els = this.ctrlElements;
+		if (els.level.value == 'c') {
+			/* validation could go here */
+			paramObj.c = new Params( els.rows.value, els.columns.value, els.bombs.value );
+		}
+		var newp = paramObj[els.level.value];
+	
+		if ( theBoard.num == null || !equalParams(newp, theBoard.num) ) {
+			theBoard.makeBoard(newp, els.tsize.value);
+		}
+	
+		theBoard.newGame();
+	},
+
+	resizeTiles: function(e) {
+		theBoard.tileSize = theControls.ctrlElements.tsize.value;
+		theBoard.tableElt.setAttribute("class", "tiles-" + theControls.ctrlElements.tsize.value );
+
+		theBoard.allTiles( refreshImage );
+	},
+
+	changeLevel: function(e) {
+		var level = theControls.ctrlElements.level.value;
+		if ( level == 'c' ) {
+			//validation here? or not...
+		}
+		else if ( theBoard.game != PLAYING ) theControls.newGameButton(e);
+	}
+}
+
+function radioControl(name, routine) {
+	buttons = document.getElementsByName( name );
+	for ( var i=0 ; i < buttons.length ; i++ ) {
+		buttons[i].onclick = routine
+	}
+
 }
 
 function equalParams(a,b) {
@@ -27,27 +69,4 @@ function equalParams(a,b) {
 	if (a.cols != b.cols) return false;
 	if (a.bombs != b.bombs) return false;
 	return true;
-}
-
-function newGameButton(e) {
-	
-	var els = controlsForm.elements;
-	if (els.level.value == 'c') {
-		/* validation could go here */
-		paramObj.c = new Params( els.rows.value, els.columns.value, els.bombs.value );
-	}
-	var newp = paramObj[els.level.value];
-	
-	if ( theBoard.num == null || !equalParams(newp, theBoard.num) ) {
-		theBoard.makeBoard(newp, els.tsize.value);
-	}
-	
-	theBoard.newGame();
-}
-
-function resizeBoard(e) {
-	theBoard.tileSize = controlsForm.elements.tsize.value;
-	theBoard.tableElt.setAttribute("class", "tiles-" + controlsForm.elements.tsize.value );
-
-	theBoard.allTiles( refreshImage );
 }
