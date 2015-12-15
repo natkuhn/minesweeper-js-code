@@ -22,16 +22,22 @@ function Controls() {
 	this.bombform = document.getElementById("bombs");
 	this.bomberrormsg = document.getElementById("bomberrormsg");
 	
-	//attach validators to "onblur" methods here
+	this.rows = null;
 	this.rowform.onblur = function(e) {
-		theControls.validateNum(theControls.rowform, 1, 99, "rowerror", true);
+		theControls.rows = theControls.validateNum(theControls.rowform, 1, 99, "rowerror", true);
 	}
+	
+	this.cols = null;
 	this.colform.onblur = function(e) {
-		theControls.validateNum(theControls.colform, 1, 99, "colerror", true);
+		theControls.cols = theControls.validateNum(theControls.colform, 1, 99, "colerror", true);
 	}
+	
+	this.bombs = null;
 	this.bombform.onblur = function(e) {
-		theControls.bomberrormsg.textContent = "Must be a number between 0 and 9999";
-		theControls.validateNum(theControls.bombform, 0, 9999, "bomberror", true);
+		var area = theControls.rows * theControls.cols;
+		theControls.bomberrormsg.textContent = "Must be a number between 0 and " +
+			(area ? area : "9999");
+		theControls.bombs = theControls.validateBombs(true);
 	}
 	
 	this.newGameButton();
@@ -53,19 +59,25 @@ Controls.prototype = {
 		return valid ? num : null;
 	},
 	
+	validateBombs: function(soft) {
+		var area = theControls.rows * theControls.cols;
+		theControls.bomberrormsg.textContent = "Must be a number between 0 and " +
+			(area ? area : "9999");
+		return theControls.validateNum(theControls.bombform, 0, 9999, "bomberror", soft);
+	},
+	
 	newGameButton: function(e) {
 		var els = this.ctrlElements;
 		if (els.level.value == 'c') {
-			var rows = theControls.validateNum(theControls.rowform, 1, 99, "rowerror", false);
-			var cols = theControls.validateNum(theControls.colform, 1, 99, "colerror", false);
-			if ( rows == null || cols == null ) return;
+			//need to revalidate with soft = false, to not allow null values
+			this.rows = this.validateNum(theControls.rowform, 1, 99, "rowerror", false);
+			this.cols = this.validateNum(theControls.colform, 1, 99, "colerror", false);
+			if ( this.rows == null || this.cols == null ) return;
 			
-			var area = rows * cols;
-			theControls.bomberrormsg.textContent = "Must be a number between 0 and "+area;
-			var bombs = theControls.validateNum(theControls.bombform, 0, area, "bomberror", false);
-			if ( bombs == null ) return;
+			this.bombs = this.validateBombs(false);
+			if ( this.bombs == null ) return;
 			
-			paramObj.c = new Params( els.rows.value, els.columns.value, els.bombs.value );
+			paramObj.c = new Params( this.rows, this.cols, this.bombs );
 		}
 		var newp = paramObj[els.level.value];
 	

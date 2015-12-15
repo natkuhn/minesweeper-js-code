@@ -3,7 +3,8 @@
 	
 	v0.1 11/27/15: handles left click, right click, and standard game play
 	
-	* TODO: need to validate parameters
+	* TODO: clicking custom should set rows and columns to the last game, and turn off any errors?
+	* TODO: make fixed width for bomberrormsg (between 15 and 25 em?)
 	* TODO: turn settings into menu which is shown or hidden
 	* TODO: larger tiles for tablet
 	* TODO: how to make work on tablet?
