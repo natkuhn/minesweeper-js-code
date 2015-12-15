@@ -3,13 +3,14 @@
 	
 	v0.1 11/27/15: handles left click, right click, and standard game play
 	
-	* TODO: need to validate parameters
+	* TODO: clicking custom should set rows and columns to the last game, and turn off any errors?
+	* TODO: make fixed width for bomberrormsg (between 15 and 25 em?)
 	* TODO: turn settings into menu which is shown or hidden
 	* TODO: larger tiles for tablet
 	* TODO: how to make work on tablet?
 	* TODO: force screen to scroll not shrink the tiles
 	* TODO: make other things besides grid non-selectable (e.g. settings)?
-	* TODO: change board size dynamically if game not started
+	* TODO: top margin on the two-column table should be fixed, no auto
 */
 
 /* Here are all the different appearances of tiles:
@@ -28,6 +29,7 @@ covered-flag after winning
 var theTimer;
 var theCounter;
 var theBoard;
+var theControls;
 
 onload = init;
 
@@ -40,7 +42,7 @@ function init() {
 	Note that post provides an alternate approach to left-vs-right click detection,
 	in case some right-clicks are sneaking through as left-clicks. */
 	
-	initControls(); 
+	theControls = new Controls(); 
 /*	this.p = new Params(1 * getURLParameter("rows", 16), 
 						1 * getURLParameter("columns", 16), 
 						1 * getURLParameter("bombs", 40) )
@@ -363,10 +365,10 @@ function Timer(element) {
 		this.timerObj = window.setInterval(this.timerFn, 1000);
 	}
 	
-	this.going = function() {
-		if (! this.timerObj ) this.start();
-	}
-	
+// 	this.going = function() {
+// 		if (! this.timerObj ) this.start();
+// 	}
+// 	
 	this.stop = function() {
 		window.clearInterval(this.timerObj);
 		this.timerObj = null;

@@ -15,14 +15,7 @@ body {
 
 .columns {
 	border-collapse:	collapse;
-/*	text-indent:		10px; 
- width="100%" height="100%"*/
 }
-
-#customsize td {
-	padding:	0px 3px;
-}
-
 
 #controls {
 	line-height:	1.8em;
@@ -36,3 +29,33 @@ body {
 	margin:	10px 20px;
 	background-color:	White;
 }
+
+#customform {
+	line-height:	1em;
+	margin-top:		1em;
+}
+
+#customform td {
+	padding:	0px 3px;
+}
+
+.noerror {
+	visibility:		hidden;
+}
+
+.error {
+	color:			Red;
+}
+
+.hidecustom {
+	visibility:		hidden;
+}
+
+.showcustom {
+	visibility:		visible;
+}
+/*
+#bomberrormsg {
+	width:			15em;
+}
+*/
