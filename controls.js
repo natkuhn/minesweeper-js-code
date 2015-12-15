@@ -20,21 +20,51 @@ function Controls() {
 	this.rowform = document.getElementById("rows");
 	this.colform = document.getElementById("columns");
 	this.bombform = document.getElementById("bombs");
+	this.bomberrormsg = document.getElementById("bomberrormsg");
 	
 	//attach validators to "onblur" methods here
-// 	this.rowform.onblur = function(e) {
-// 		rowvalid = 
-// 	}
+	this.rowform.onblur = function(e) {
+		theControls.validateNum(theControls.rowform, 1, 99, "rowerror", true);
+	}
+	this.colform.onblur = function(e) {
+		theControls.validateNum(theControls.colform, 1, 99, "colerror", true);
+	}
+	this.bombform.onblur = function(e) {
+		theControls.bomberrormsg.textContent = "Must be a number between 0 and 9999";
+		theControls.validateNum(theControls.bombform, 0, 9999, "bomberror", true);
+	}
 	
 	this.newGameButton();
 }
 
 Controls.prototype = {
-	newGameButton: function(e) {
+	validateNum: function(item, min, max, errorId, soft) {
+		var value = item.value;
+		if ( soft && item.value == "" ) var valid = true;
+		else {
+			valid = /^\d+$/.test(value)
+			if ( valid ) {
+				var num = 1 * value;
+				if ( num < min || num > max ) valid = false;
+			}
+		}
+		//fail
+		document.getElementById(errorId).setAttribute( "class", valid ? "noerror" : "error" );
+		return valid ? num : null;
+	},
 	
+	newGameButton: function(e) {
 		var els = this.ctrlElements;
 		if (els.level.value == 'c') {
-			/* validation could go here */
+			var rows = theControls.validateNum(theControls.rowform, 1, 99, "rowerror", false);
+			var cols = theControls.validateNum(theControls.colform, 1, 99, "colerror", false);
+			if ( rows == null || cols == null ) return;
+			
+			var area = rows * cols;
+			theControls.bomberrormsg.textContent = "Must be a number between 0 and "+area;
+			var bombs = theControls.validateNum(theControls.bombform, 0, area, "bomberror", false);
+			if ( bombs == null ) return;
+			
 			paramObj.c = new Params( els.rows.value, els.columns.value, els.bombs.value );
 		}
 		var newp = paramObj[els.level.value];
@@ -56,11 +86,11 @@ Controls.prototype = {
 	changeLevel: function(e) {
 		var level = theControls.ctrlElements.level.value;
 		if ( level == 'c' ) {
-// 			theControls.customform.setAttribute("class", "showcustom" );
+ 			theControls.customform.setAttribute("class", "showcustom" );
 			//validation here? or not...
 		}
 		else {
-// 			theControls.customform.setAttribute("class", "hidecustom" );
+ 			theControls.customform.setAttribute("class", "hidecustom" );
 			if ( theBoard.game != PLAYING ) theControls.newGameButton(e);
 		}
 	}
