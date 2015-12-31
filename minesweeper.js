@@ -42,6 +42,10 @@ function init() {
 	Note that post provides an alternate approach to left-vs-right click detection,
 	in case some right-clicks are sneaking through as left-clicks. */
 	
+	window.onbeforeunload = function() {
+		return theBoard.game == PLAYING ? "Leaving this page will lose your current progress" : null
+	}
+	
 	theControls = new Controls(); 
 /*	this.p = new Params(1 * getURLParameter("rows", 16), 
 						1 * getURLParameter("columns", 16), 
