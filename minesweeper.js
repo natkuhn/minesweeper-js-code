@@ -11,6 +11,7 @@
 	* TODO: force screen to scroll not shrink the tiles
 	* TODO: make other things besides grid non-selectable (e.g. settings)?
 	* TODO: top margin on the two-column table should be fixed, no auto
+	* BUG: auto-uncover seems to uncover flagged squares which are non-bombs, leading to a negative count at the end
 */
 
 /* Here are all the different appearances of tiles:
