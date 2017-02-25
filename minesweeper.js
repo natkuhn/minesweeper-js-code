@@ -203,7 +203,8 @@ function Tile(i,j) {
 Tile.prototype = {
 	reset: function() {
 		this.bomb = false
-		this.status = COVERED//		this.bombNeighbors = -1;	//unrevealed--not used in javascript version
+		this.status = COVERED
+		this.bombNeighbors = -1;	//unrevealed
 		this.setImage( addSize("covered-"), retString("") );
 		this.back = {};
 	},
@@ -270,23 +271,25 @@ Tile.prototype = {
 	},
 	
 	uncoverNonbomb: function() {
+		assert(!this.bomb, "uncoverNonbomb: tile at ["+i+","+j+"] shouldn't be a bomb, but it is");
 		var neighbors = [];
-		var bombNeighbors = 0;
 		var i = this.myRow;
 		var j = this.myCol;
-		addIn( theBoard.getTile( i-1 , j-1 ) );
-		addIn( theBoard.getTile( i-1 , j   ) );
-		addIn( theBoard.getTile( i-1 , j+1 ) );
-		addIn( theBoard.getTile( i   , j-1 ) );
-		addIn( theBoard.getTile( i   , j+1 ) );
-		addIn( theBoard.getTile( i+1 , j-1 ) );
-		addIn( theBoard.getTile( i+1 , j   ) );
-		addIn( theBoard.getTile( i+1 , j+1 ) );
+
+		this.bombNeighbors = 0;
+		this.bombNeighbors += addIn( theBoard.getTile( i-1 , j-1 ) );
+		this.bombNeighbors += addIn( theBoard.getTile( i-1 , j   ) );
+		this.bombNeighbors += addIn( theBoard.getTile( i-1 , j+1 ) );
+		this.bombNeighbors += addIn( theBoard.getTile( i   , j-1 ) );
+		this.bombNeighbors += addIn( theBoard.getTile( i   , j+1 ) );
+		this.bombNeighbors += addIn( theBoard.getTile( i+1 , j-1 ) );
+		this.bombNeighbors += addIn( theBoard.getTile( i+1 , j   ) );
+		this.bombNeighbors += addIn( theBoard.getTile( i+1 , j+1 ) );
 		
 		this.status = UNCOVERED;
 		
-		if (bombNeighbors > 0) {
-			this.setImage( addSize( "n" + bombNeighbors + " uncovered-" ), retString(""+bombNeighbors) );
+		if (this.bombNeighbors > 0) {
+			this.setImage( addSize( "n" + this.bombNeighbors + " uncovered-" ), retString(""+this.bombNeighbors) );
 		}
 		else {
 			this.setImage( addSize("uncovered-"), retString("") );
@@ -306,7 +309,7 @@ Tile.prototype = {
 			return;
 		}
 		
-		if (bombNeighbors > 0) return;
+		if (this.bombNeighbors > 0) return;
 		
 		//all neighbors are non-bombs, uncover them
 		for ( i=0 ; i < neighbors.length ; i++ ) {
@@ -317,8 +320,9 @@ Tile.prototype = {
 		function addIn(x) {
 			if (x) {
 				neighbors.push(x);
-				if (x.bomb) bombNeighbors++;
+				if (x.bomb) return 1;
 			}
+			return 0;
 		}
 	},
 	
