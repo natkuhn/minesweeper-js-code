@@ -2,6 +2,7 @@
 	Nat Kuhn, started 11/26/15
 	
 	v0.1 11/27/15: handles left click, right click, and standard game play
+	v0.2 2/25/17: added "Back" button, though in a fairly hackish way
 	
 	* TODO: clicking custom should set rows and columns to the last game, and turn off any errors?
 	* TODO: make fixed width for bomberrormsg (between 15 and 25 em?)
@@ -90,6 +91,23 @@ function Board() {
 		this.game = OVER;	//don't accept more clicks
 		theTimer.stop();
 		this.setFace( win ? "happy" : "sad" );
+	}
+	
+	//restore the state for "Back" button
+	this.goBack = function(e) {
+		if (theBoard.game == WAITING) return;
+		if (theBoard.game == OVER) {
+			theBoard.game = PLAYING;
+			theBoard.setFace("neutral");
+			theTimer.start()
+		}
+		theBoard.allTiles( function(t) { t.goBack() } );
+		theBoard.nonBombs = theBoard.saveNonBombs;
+		theCounter.setTo(theBoard.saveCounter);
+	}
+	
+	this.setFlags = function(e) {
+		//need code here to set flags
 	}
 	
 	this.makeBoard = function(p, t) {
@@ -187,6 +205,7 @@ Tile.prototype = {
 		this.bomb = false
 		this.status = COVERED//		this.bombNeighbors = -1;	//unrevealed--not used in javascript version
 		this.setImage( addSize("covered-"), retString("") );
+		this.back = {};
 	},
 	
 	rightClick: function(evtObj) {
@@ -218,17 +237,20 @@ Tile.prototype = {
 			theTimer.start();
 			theBoard.game = PLAYING;
 		}
-//		theTimer.going();	//make sure the timer is going
+
 		//ignore clicks if game over, or on flags or already uncovered
 		if ( theBoard.game == OVER || this.status == FLAG || this.status == UNCOVERED ) return;
+		
+		//save the state for the "Back" button
+		theBoard.allTiles( function(t) { t.saveMe() } );
+		theBoard.saveNonBombs = theBoard.nonBombs;
+		theBoard.saveCounter = theCounter.getVal();
+		
 		if ( this.bomb ) {	//oops, you lose
 			this.status = UNCOVERED;
 			theCounter.decrement();
 			this.setImage( addSize("redsquare-"), iconHTML("bomb") );
 			//game over, loss
-//	not necessary, covered by endgame()
-//			theBoard.playing = false;
-//			theTimer.stop()
 			theBoard.allTiles( function(t) {
 				if ( t.status == UNCOVERED ) return;
 				if ( t.bomb ) {
@@ -274,9 +296,6 @@ Tile.prototype = {
 		
 		if (theBoard.nonBombs == 0 ) {
 			//game over, win
-//	not necessary, covered by endgame()
-//			theBoard.playing = false;
-//			theTimer.stop();
 			theBoard.allTiles( function(t) {
 				if ( t.status == UNCOVERED ) return;	//don't care about uncovered
 				if ( t.status != FLAG ) theCounter.decrement();	//could just set counter to zero but this is fail-safe
@@ -303,10 +322,25 @@ Tile.prototype = {
 		}
 	},
 	
+	//note that the arguments c and h are _functions_ which, when 
+	//called with tile size as argument, return the appropriate strings
+	//addSize, retStr, and iconHTML below, are function factories, 
+	//returning appropriate functions to pass to setImage
 	setImage: function(c,h) {
 		this.myClass = c;
 		this.myHTML = h;
 		refreshImage(this);
+	},
+	
+	saveMe:	function() {
+		this.back.status = this.status;
+		this.back.myHTML = this.myHTML;
+		this.back.myClass = this.myClass;
+	},
+	
+	goBack:	function () {
+		this.status = this.back.status;
+		this.setImage(this.back.myClass,this.back.myHTML);
 	}
 }
 
@@ -337,6 +371,10 @@ function Counter(element) {
 		if (this.myValue >= 0) var str = ("00"+Math.min(this.myValue,999)).slice(-3);
 		else var str = "-"+("0"+Math.min(-this.myValue,99)).slice(-2);
 		this.myElement.textContent = str	//for IE<9, use innerHTML
+	}
+	
+	this.getVal = function() {
+		return this.myValue
 	}
 	
 	this.setTo = function(k) {
