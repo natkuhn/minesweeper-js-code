@@ -108,7 +108,21 @@ function Board() {
 	
 	this.setFlags = function(e) {
 		//need code here to set flags
-		
+		theBoard.allTiles( function (t) {
+			if (t.status != UNCOVERED) return;
+			if (t.bombNeighbors <= 0) return;
+			var n = t.getNeighbors();
+			var cn = 0;
+			for (var i in n) {
+				if (n[i].status != UNCOVERED) cn++;	//count covered, question mark, flagged
+			}
+			assert (cn >= t.bombNeighbors, "more bombs than covered neighbors");
+			if (cn == t.bombNeighbors) {	//all neighbors must be bombs, flag them
+				for (i in n) {
+					if (n[i].status == COVERED) n[i].setFlag();
+				}
+			}
+		} );
 	}
 	
 	this.makeBoard = function(p, t) {
@@ -317,7 +331,7 @@ Tile.prototype = {
 		this.status = FLAG;
 		this.setImage( addSize("covered-"), iconHTML("flag") );
 	
-	}
+	},
 	
 	//note that the arguments c and h are _functions_ which, when 
 	//called with tile size as argument, return the appropriate strings
