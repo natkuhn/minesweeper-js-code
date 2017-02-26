@@ -108,6 +108,7 @@ function Board() {
 	
 	this.setFlags = function(e) {
 		//need code here to set flags
+		
 	}
 	
 	this.makeBoard = function(p, t) {
@@ -213,9 +214,10 @@ Tile.prototype = {
 		//do nothing if game over or already uncovered
 		if ( theBoard.game == OVER || this.status == UNCOVERED ) return false;
 		if ( this.status == COVERED ) {
-			theCounter.decrement();
-			this.status = FLAG;
-			this.setImage( addSize("covered-"), iconHTML("flag") );
+			this.setFlag();
+// 			theCounter.decrement();
+// 			this.status = FLAG;
+// 			this.setImage( addSize("covered-"), iconHTML("flag") );
 			return false;
 		}
 		if ( this.status == FLAG ) {	//there could be a setting to go straight back to covered w/o going through ?
@@ -272,19 +274,11 @@ Tile.prototype = {
 	
 	uncoverNonbomb: function() {
 		assert(!this.bomb, "uncoverNonbomb: tile at ["+i+","+j+"] shouldn't be a bomb, but it is");
-		var neighbors = [];
-		var i = this.myRow;
-		var j = this.myCol;
-
+		var i;
+		
+		var neighbors = this.getNeighbors();
 		this.bombNeighbors = 0;
-		this.bombNeighbors += addIn( theBoard.getTile( i-1 , j-1 ) );
-		this.bombNeighbors += addIn( theBoard.getTile( i-1 , j   ) );
-		this.bombNeighbors += addIn( theBoard.getTile( i-1 , j+1 ) );
-		this.bombNeighbors += addIn( theBoard.getTile( i   , j-1 ) );
-		this.bombNeighbors += addIn( theBoard.getTile( i   , j+1 ) );
-		this.bombNeighbors += addIn( theBoard.getTile( i+1 , j-1 ) );
-		this.bombNeighbors += addIn( theBoard.getTile( i+1 , j   ) );
-		this.bombNeighbors += addIn( theBoard.getTile( i+1 , j+1 ) );
+		for (i in neighbors) if (neighbors[i].bomb) this.bombNeighbors++;
 		
 		this.status = UNCOVERED;
 		
@@ -312,19 +306,18 @@ Tile.prototype = {
 		if (this.bombNeighbors > 0) return;
 		
 		//all neighbors are non-bombs, uncover them
-		for ( i=0 ; i < neighbors.length ; i++ ) {
+		for ( i in neighbors ) {
 			var t = neighbors[i];
 			if ( t.status != UNCOVERED ) t.uncoverNonbomb();
 		}
-
-		function addIn(x) {
-			if (x) {
-				neighbors.push(x);
-				if (x.bomb) return 1;
-			}
-			return 0;
-		}
 	},
+	
+	setFlag: function() {
+		theCounter.decrement();
+		this.status = FLAG;
+		this.setImage( addSize("covered-"), iconHTML("flag") );
+	
+	}
 	
 	//note that the arguments c and h are _functions_ which, when 
 	//called with tile size as argument, return the appropriate strings
@@ -345,6 +338,28 @@ Tile.prototype = {
 	goBack:	function () {
 		this.status = this.back.status;
 		this.setImage(this.back.myClass,this.back.myHTML);
+	},
+	
+	getNeighbors:	function () {
+		var neigh = [];
+		var i = this.myRow;
+		var j = this.myCol;
+		
+		addIn( neigh, i-1 , j-1 );
+		addIn( neigh, i-1 , j   );
+		addIn( neigh, i-1 , j+1 );
+		addIn( neigh, i   , j-1 );
+		addIn( neigh, i   , j+1 );
+		addIn( neigh, i+1 , j-1 );
+		addIn( neigh, i+1 , j   );
+		addIn( neigh, i+1 , j+1 );
+		
+		return neigh;
+
+		function addIn( list, i, j ) {
+			var x = theBoard.getTile(i,j);
+			if (x) list.push(x);
+		}
 	}
 }
 
