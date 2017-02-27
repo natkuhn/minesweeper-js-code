@@ -49,11 +49,9 @@ function init() {
 	}
 	
 	theControls = new Controls(); 
-/*	this.p = new Params(1 * getURLParameter("rows", 16), 
-						1 * getURLParameter("columns", 16), 
-						1 * getURLParameter("bombs", 40) )
-	theBoard.makeBoard( p, getURLParameter("tilesize", "m") );
-	theBoard.newGame();*/
+	
+	theControls.newGameButton();	//needs to be called after theControls has value b/c 
+									//button is disabled in new game.
 }
 
 function Params(r,c,b) {
@@ -85,6 +83,7 @@ function Board() {
 		theCounter.setTo( this.num.bombs );
 		theTimer.reset();
 		this.setFace("neutral");
+		theControls.backButton.disabled = true;
 	}
 	
 	this.endGame = function(win) {
@@ -104,6 +103,7 @@ function Board() {
 		theBoard.allTiles( function(t) { t.goBack() } );
 		theBoard.nonBombs = theBoard.saveNonBombs;
 		theCounter.setTo(theBoard.saveCounter);
+		theControls.backButton.disabled = true;
 	}
 	
 	this.setFlags = function(e) {
@@ -262,6 +262,7 @@ Tile.prototype = {
 		theBoard.allTiles( function(t) { t.saveMe() } );
 		theBoard.saveNonBombs = theBoard.nonBombs;
 		theBoard.saveCounter = theCounter.getVal();
+		theControls.backButton.disabled = false;
 		
 		if ( this.bomb ) {	//oops, you lose
 			this.status = UNCOVERED;
