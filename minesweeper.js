@@ -68,6 +68,7 @@ function getURLParameter(name, defaultVal) {
 
 function Board() {
 	this.num = null;	// needed in newGameButton()
+	this.locked = false;
 	
 	this.tableElt = document.getElementById("grid");
 	
@@ -77,6 +78,10 @@ function Board() {
 	}
 
 	this.newGame = function() {
+		if (this.locked) {
+			window.close();
+			return;
+		}
 		this.game = WAITING;
 		this.allTiles( function(t) { t.reset() } );
 		theBoard.setBombs( this.num.bombs );
@@ -104,6 +109,11 @@ function Board() {
 		theBoard.nonBombs = theBoard.saveNonBombs;
 		theCounter.setTo(theBoard.saveCounter);
 		theControls.backButton.disabled = true;
+	}
+	
+	this.lock = function(setlock) {
+		this.locked = setlock;
+		theControls.lockButton.disabled = setlock;
 	}
 	
 	this.setFlags = function(e) {

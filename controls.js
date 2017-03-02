@@ -43,6 +43,8 @@ function Controls() {
 	this.backButton = document.getElementById("back");
 	this.backButton.onclick = theBoard.goBack;
 	document.getElementById("flag").onclick = theBoard.setFlags;
+	this.lockButton = document.getElementById("lock");
+	this.lockButton.onclick = function(e) { theBoard.lock(true); }
 }
 
 Controls.prototype = {
