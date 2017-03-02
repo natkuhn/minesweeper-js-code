@@ -21,7 +21,7 @@ body {
 	line-height:	1.8em;
 }
 
-#newgame {
+.bigbutton {
 	-webkit-appearance:	button;
 	font-family:	Verdana;
 	font-size:		1em;

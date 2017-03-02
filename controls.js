@@ -40,7 +40,9 @@ function Controls() {
 		theControls.bombs = theControls.validateBombs(true);
 	}
 	
-	this.newGameButton();
+	this.backButton = document.getElementById("back");
+	this.backButton.onclick = theBoard.goBack;
+	document.getElementById("flag").onclick = theBoard.setFlags;
 }
 
 Controls.prototype = {
